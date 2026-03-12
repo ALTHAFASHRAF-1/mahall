@@ -1,3 +1,5 @@
+Here is the updated HTML code with the requested changes: all form fields are now non-required, the loading button has been removed, and the "Ration Card No" field has been changed to a "Ration Card Type" dropdown with options like APL.
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -222,7 +224,7 @@
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
             overflow-y: auto;
-            padding: 0;               /* removed outer padding for full mobile width */
+            padding: 0;
         }
         
         @keyframes fadeIn {
@@ -230,23 +232,21 @@
             to { opacity: 1; }
         }
         
-        /* ----- MODAL CONTENT –– full width on mobile, with inner scroll & zoom ----- */
         .modal-content {
             position: relative;
             background: white;
-            margin: 0 auto;            /* no top margin on mobile */
+            margin: 0 auto;
             padding: 1.5rem 1.2rem;
             width: 100%;
             max-width: 900px;
-            min-height: 100vh;          /* forces full screen height on mobile */
-            border-radius: 0;            /* flat edges for true fullscreen feel */
+            min-height: 100vh;
+            border-radius: 0;
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             animation: slideUp 0.4s ease;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
         }
         
-        /* larger screens: bring back nice modal shape */
         @media (min-width: 768px) {
             .modal-content {
                 margin: 2rem auto;
@@ -257,7 +257,6 @@
             }
         }
         
-        /* PDF container full width, scrollable, pinch-to-zoom friendly */
         .pdf-container {
             text-align: center;
             margin: 1rem 0 0;
@@ -275,7 +274,7 @@
         
         .pdf-container iframe {
             width: 100%;
-            height: 80vh;               /* almost full viewport height on mobile */
+            height: 80vh;
             border: none;
             background: white;
             display: block;
@@ -305,7 +304,7 @@
         }
         
         .close-btn {
-            position: sticky;           /* stays visible while scrolling long form */
+            position: sticky;
             top: 0.5rem;
             right: 0.5rem;
             float: right;
@@ -314,14 +313,14 @@
             color: #555;
             background: #f0f0f0;
             border: none;
-            width: 44px;                /* bigger tap target */
+            width: 44px;
             height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
             z-index: 20;
-            margin-bottom: -44px;        /* offset so content doesn't hide under */
+            margin-bottom: -44px;
         }
         
         @media (min-width: 768px) {
@@ -357,7 +356,7 @@
         
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr;    /* stacked on mobile */
+            grid-template-columns: 1fr;
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
@@ -382,7 +381,7 @@
         
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 0.9rem;              /* bigger touch area */
+            padding: 0.9rem;
             border: 2px solid #e0e0e0;
             border-radius: 14px;
             font-size: 1rem;
@@ -397,7 +396,6 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        /* info cards stack nicely */
         .info-card {
             background: #f7fafc;
             padding: 1rem;
@@ -454,6 +452,18 @@
             font-size: 1.3rem;
             font-weight: 700;
             margin: 2rem 0 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
+        }
+        
+        .submit-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
         }
         
         .alert {
@@ -464,18 +474,23 @@
             font-size: 1rem;
         }
         
-        .loader:after {
-            content: '';
-            display: inline-block;
-            width: 48px;
-            height: 48px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 2px solid #9ae6b4;
         }
         
-        /* slideOut animation kept */
+        .alert-error {
+            background: #fff5f5;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+        }
+        
+        /* loader removed – not used anymore */
+        .loader {
+            display: none !important;
+        }
+        
         @keyframes slideOut {
             from { opacity: 1; transform: translateX(0); }
             to { opacity: 0; transform: translateX(100%); }
@@ -504,9 +519,9 @@
         </div>
     </div>
     
-    <!-- Old Details Modal - PDF Viewer (full width mobile) -->
+    <!-- Old Details Modal - PDF Viewer -->
     <div id="oldDetailsModal" class="modal">
-        <div class="modal-content" style="padding: 1rem 0.5rem 1rem 0.5rem;"> <!-- less horizontal padding on mobile -->
+        <div class="modal-content" style="padding: 1rem 0.5rem;">
             <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
             <h2 style="padding-left: 0.8rem;">📄 Document Viewer</h2>
             <div class="pdf-container" id="pdfContainer">
@@ -519,14 +534,14 @@
         </div>
     </div>
     
-    <!-- New Details Modal - Form full width, scrollable -->
+    <!-- New Details Modal - NO REQUIRED FIELDS, Ration Card replaced with TYPE dropdown -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
             <h2>📝 Complete Details Form</h2>
             
             <div id="formAlert" class="alert"></div>
-            <div id="formLoader" class="loader"></div>
+            <!-- loader div removed (not used) -->
             
             <form id="newDetailsForm">
                 <!-- User Info Cards -->
@@ -541,47 +556,47 @@
                     </div>
                 </div>
 
-                <!-- Main Form Fields -->
+                <!-- Main Form Fields - all 'required' removed, ration card replaced -->
                 <h3>🏠 Basic Information</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="block">Block *</label>
-                        <input type="text" id="block" required placeholder="Enter block (e.g., A)">
+                        <label for="block">Block</label>
+                        <input type="text" id="block" placeholder="Enter block (e.g., A)">
                     </div>
                     
                     <div class="form-group">
-                        <label for="grade">Grade *</label>
-                        <input type="text" id="grade" required placeholder="Enter grade">
+                        <label for="grade">Grade</label>
+                        <input type="text" id="grade" placeholder="Enter grade">
                     </div>
                     
                     <div class="form-group">
-                        <label for="mobile">Mobile Number *</label>
-                        <input type="tel" id="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10" inputmode="numeric">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10" inputmode="numeric">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseHolder">House Holder Name *</label>
-                        <input type="text" id="houseHolder" required placeholder="Enter house holder name">
+                        <label for="houseHolder">House Holder Name</label>
+                        <input type="text" id="houseHolder" placeholder="Enter house holder name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseName">House Name *</label>
-                        <input type="text" id="houseName" required placeholder="Enter house name">
+                        <label for="houseName">House Name</label>
+                        <input type="text" id="houseName" placeholder="Enter house name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="fatherName">Father's Name *</label>
-                        <input type="text" id="fatherName" required placeholder="Enter father's name">
+                        <label for="fatherName">Father's Name</label>
+                        <input type="text" id="fatherName" placeholder="Enter father's name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="place">Place *</label>
-                        <input type="text" id="place" required placeholder="Enter place">
+                        <label for="place">Place</label>
+                        <input type="text" id="place" placeholder="Enter place">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseType">House Type *</label>
-                        <select id="houseType" required>
+                        <label for="houseType">House Type</label>
+                        <select id="houseType">
                             <option value="">Select house type</option>
                             <option value="Own">Own</option>
                             <option value="Rented">Rented</option>
@@ -590,8 +605,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select id="gender" required>
+                        <label for="gender">Gender</label>
+                        <select id="gender">
                             <option value="">Select gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -600,43 +615,51 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="postalAddress">Postal Address *</label>
-                        <textarea id="postalAddress" required placeholder="Enter complete postal address" rows="2"></textarea>
+                        <label for="postalAddress">Postal Address</label>
+                        <textarea id="postalAddress" placeholder="Enter complete postal address" rows="2"></textarea>
+                    </div>
+                    
+                    <!-- Ration Card field changed to dropdown (type) -->
+                    <div class="form-group">
+                        <label for="rationType">Ration Card Type</label>
+                        <select id="rationType">
+                            <option value="">Select ration type</option>
+                            <option value="APL">APL (Above Poverty Line)</option>
+                            <option value="BPL">BPL (Below Poverty Line)</option>
+                            <option value="AAY">AAY (Antyodaya)</option>
+                            <option value="PHH">PHH (Priority Household)</option>
+                            <option value="Other">Other</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
-                        <label for="rationCard">Ration Card No *</label>
-                        <input type="text" id="rationCard" required placeholder="Enter ration card number">
+                        <label for="division">Division</label>
+                        <input type="text" id="division" placeholder="Enter division">
                     </div>
                     
                     <div class="form-group">
-                        <label for="division">Division *</label>
-                        <input type="text" id="division" required placeholder="Enter division">
+                        <label for="ward">Ward</label>
+                        <input type="text" id="ward" placeholder="Enter ward">
                     </div>
                     
                     <div class="form-group">
-                        <label for="ward">Ward *</label>
-                        <input type="text" id="ward" required placeholder="Enter ward">
+                        <label for="buildingNo">Building No</label>
+                        <input type="text" id="buildingNo" placeholder="Enter building number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="buildingNo">Building No *</label>
-                        <input type="text" id="buildingNo" required placeholder="Enter building number">
+                        <label for="oldHouseNo">Old House No</label>
+                        <input type="text" id="oldHouseNo" placeholder="Enter old house number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="oldHouseNo">Old House No *</label>
-                        <input type="text" id="oldHouseNo" required placeholder="Enter old house number">
+                        <label for="madrasa">Madrasa</label>
+                        <input type="text" id="madrasa" placeholder="Enter madrasa name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="madrasa">Madrasa *</label>
-                        <input type="text" id="madrasa" required placeholder="Enter madrasa name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="anyGrant">Any Grant? *</label>
-                        <select id="anyGrant" required>
+                        <label for="anyGrant">Any Grant?</label>
+                        <select id="anyGrant">
                             <option value="">Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
@@ -644,12 +667,12 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="donation">Donation *</label>
-                        <input type="text" id="donation" required placeholder="Enter donation amount/details">
+                        <label for="donation">Donation</label>
+                        <input type="text" id="donation" placeholder="Enter donation amount/details">
                     </div>
                 </div>
 
-                <!-- Family Members Section -->
+                <!-- Family Members Section (all fields non-required) -->
                 <h3>👥 Family Members</h3>
                 <div id="membersContainer"></div>
                 <button type="button" class="add-member" onclick="addMember()">➕ Add Family Member</button>
@@ -735,6 +758,7 @@
             memberDiv.className = 'member-section';
             memberDiv.id = `member_${memberCount}`;
             
+            // All member fields are NOT required (removed 'required' attribute)
             memberDiv.innerHTML = `
                 <div class="member-header">
                     <h5>👤 Member ${memberCount}</h5>
@@ -742,13 +766,13 @@
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="member${memberCount}_name">Name *</label>
-                        <input type="text" id="member${memberCount}_name" class="member-name" required placeholder="Enter full name">
+                        <label for="member${memberCount}_name">Name</label>
+                        <input type="text" id="member${memberCount}_name" class="member-name" placeholder="Enter full name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_gender">Gender *</label>
-                        <select id="member${memberCount}_gender" class="member-gender" required>
+                        <label for="member${memberCount}_gender">Gender</label>
+                        <select id="member${memberCount}_gender" class="member-gender">
                             <option value="">Select gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -757,38 +781,38 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_relation">Relation to House Holder *</label>
-                        <input type="text" id="member${memberCount}_relation" class="member-relation" required placeholder="e.g., Son, Daughter, Wife">
+                        <label for="member${memberCount}_relation">Relation to House Holder</label>
+                        <input type="text" id="member${memberCount}_relation" class="member-relation" placeholder="e.g., Son, Daughter, Wife">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_dob">Date of Birth *</label>
-                        <input type="date" id="member${memberCount}_dob" class="member-dob" required>
+                        <label for="member${memberCount}_dob">Date of Birth</label>
+                        <input type="date" id="member${memberCount}_dob" class="member-dob">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_age">Age *</label>
-                        <input type="number" id="member${memberCount}_age" class="member-age" required placeholder="Age in years" min="0" max="120">
+                        <label for="member${memberCount}_age">Age</label>
+                        <input type="number" id="member${memberCount}_age" class="member-age" placeholder="Age in years" min="0" max="120">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_fatherName">Father's Name *</label>
-                        <input type="text" id="member${memberCount}_fatherName" class="member-fatherName" required placeholder="Enter father's name">
+                        <label for="member${memberCount}_fatherName">Father's Name</label>
+                        <input type="text" id="member${memberCount}_fatherName" class="member-fatherName" placeholder="Enter father's name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_education">Education *</label>
-                        <input type="text" id="member${memberCount}_education" class="member-education" required placeholder="Enter education qualification">
+                        <label for="member${memberCount}_education">Education</label>
+                        <input type="text" id="member${memberCount}_education" class="member-education" placeholder="Enter education qualification">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_job">Job *</label>
-                        <input type="text" id="member${memberCount}_job" class="member-job" required placeholder="Enter occupation">
+                        <label for="member${memberCount}_job">Job</label>
+                        <input type="text" id="member${memberCount}_job" class="member-job" placeholder="Enter occupation">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_health">Health Status *</label>
-                        <select id="member${memberCount}_health" class="member-health" required>
+                        <label for="member${memberCount}_health">Health Status</label>
+                        <select id="member${memberCount}_health" class="member-health">
                             <option value="">Select health status</option>
                             <option value="Good">Good</option>
                             <option value="Average">Average</option>
@@ -798,8 +822,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_marriage">Marriage Status *</label>
-                        <select id="member${memberCount}_marriage" class="member-marriage" required>
+                        <label for="member${memberCount}_marriage">Marriage Status</label>
+                        <select id="member${memberCount}_marriage" class="member-marriage">
                             <option value="">Select status</option>
                             <option value="Married">Married</option>
                             <option value="Unmarried">Unmarried</option>
@@ -809,8 +833,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_bloodGroup">Blood Group *</label>
-                        <select id="member${memberCount}_bloodGroup" class="member-bloodGroup" required>
+                        <label for="member${memberCount}_bloodGroup">Blood Group</label>
+                        <select id="member${memberCount}_bloodGroup" class="member-bloodGroup">
                             <option value="">Select blood group</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -832,21 +856,23 @@
             
             container.appendChild(memberDiv);
             
+            // optional age calculation still works but not enforced
             const dobInput = document.getElementById(`member${memberCount}_dob`);
             const ageInput = document.getElementById(`member${memberCount}_age`);
-            
-            dobInput.addEventListener('change', function() {
-                if (this.value) {
-                    const birthDate = new Date(this.value);
-                    const today = new Date();
-                    let age = today.getFullYear() - birthDate.getFullYear();
-                    const m = today.getMonth() - birthDate.getMonth();
-                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                        age--;
+            if (dobInput && ageInput) {
+                dobInput.addEventListener('change', function() {
+                    if (this.value) {
+                        const birthDate = new Date(this.value);
+                        const today = new Date();
+                        let age = today.getFullYear() - birthDate.getFullYear();
+                        const m = today.getMonth() - birthDate.getMonth();
+                        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                            age--;
+                        }
+                        ageInput.value = age;
                     }
-                    ageInput.value = age;
-                }
-            });
+                });
+            }
         }
         
         function removeMember(button) {
@@ -872,19 +898,14 @@
         document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const mobile = document.getElementById('mobile').value;
-            if (!/^\d{10}$/.test(mobile)) {
-                showAlert('❌ Please enter a valid 10-digit mobile number', 'error');
-                return;
-            }
-            
+            // No validation for mobile – it's optional now, but we still clean data
             const formData = {
                 timestamp: new Date().toISOString(),
                 name: document.getElementById('displayName').textContent,
                 house_no: document.getElementById('displayHouseNo').textContent,
                 block: document.getElementById('block').value,
                 grade: document.getElementById('grade').value,
-                mobile: mobile,
+                mobile: document.getElementById('mobile').value,
                 house_holder: document.getElementById('houseHolder').value,
                 house_name: document.getElementById('houseName').value,
                 father_name: document.getElementById('fatherName').value,
@@ -892,7 +913,7 @@
                 house_type: document.getElementById('houseType').value,
                 gender: document.getElementById('gender').value,
                 postal_address: document.getElementById('postalAddress').value,
-                ration_card: document.getElementById('rationCard').value,
+                ration_type: document.getElementById('rationType').value,   // updated field
                 division: document.getElementById('division').value,
                 ward: document.getElementById('ward').value,
                 building_no: document.getElementById('buildingNo').value,
@@ -902,6 +923,7 @@
                 donation: document.getElementById('donation').value
             };
             
+            // Collect members (only those with at least a name, but all optional)
             const members = [];
             for (let i = 1; i <= memberCount; i++) {
                 const memberDiv = document.getElementById(`member_${i}`);
@@ -921,16 +943,13 @@
                         mobile: document.getElementById(`member${i}_mobile`)?.value || ''
                     };
                     
-                    if (memberData.name.trim() !== '') {
-                        members.push(memberData);
-                    }
+                    // include even if name empty (user might want to send blank)
+                    members.push(memberData);
                 }
             }
             
             const submitBtn = this.querySelector('button[type="submit"]');
-            const loader = document.getElementById('formLoader');
             submitBtn.disabled = true;
-            loader.style.display = 'block';
             
             try {
                 await fetch(APPS_SCRIPT_URL, {
@@ -960,7 +979,6 @@
                 showAlert('❌ Error submitting form. Please try again.', 'error');
             } finally {
                 submitBtn.disabled = false;
-                loader.style.display = 'none';
             }
         });
         
@@ -971,6 +989,7 @@
             }
         };
         
+        // mobile number cleanup (optional)
         document.getElementById('mobile').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
         });
