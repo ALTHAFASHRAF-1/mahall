@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f5f5f5;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .user-info {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .buttons-section {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .action-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .old-details {
+            background: #667eea;
+            color: white;
+        }
+        
+        .new-details {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 2rem auto;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+        }
+        
+        .close-btn:hover {
+            color: #f56565;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .members-section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f7f7f7;
+            border-radius: 5px;
+        }
+        
+        .member-input {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .member-input input {
+            flex: 1;
+        }
+        
+        .remove-member {
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        
+        .add-member {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .submit-btn:hover {
+            background: #38a169;
+        }
+        
+        @media (max-width: 768px) {
+            .buttons-section {
+                flex-direction: column;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                width: calc(100% - 2rem);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="user-info" id="userInfo"></div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    
+    <div class="container">
+        <div class="buttons-section">
+            <button class="action-btn old-details" onclick="showOldDetails()">Old Details</button>
+            <button class="action-btn new-details" onclick="showNewDetails()">New Details</button>
+        </div>
+    </div>
+    
+    <!-- Old Details Modal -->
+    <div id="oldDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
+            <h2>Old Details - Image</h2>
+            <div class="image-container" id="imageContainer">
+                <img id="userImage" src="" alt="User Image" style="display: none;">
+                <p id="noImageMsg" style="display: none; color: #666;">No image available</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Details Modal -->
+    <div id="newDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
+            <h2>New Details Form</h2>
+            
+            <form id="newDetailsForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="house_no">House No</label>
+                    <input type="text" id="house_no" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="block">Block</label>
+                    <input type="text" id="block" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="father_name">Father Name</label>
+                    <input type="text" id="father_name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="place">Place</label>
+                    <input type="text" id="place" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ph">Phone</label>
+                    <input type="tel" id="ph" required>
+                </div>
+                
+                <div class="members-section">
+                    <h3>Additional Members</h3>
+                    <div id="membersContainer">
+                        <div class="member-input">
+                            <input type="text" placeholder="Member 1 Name" class="member-name">
+                            <button type="button" class="remove-member" onclick="removeMember(this)" style="display: none;">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-member" onclick="addMember()">+ Add Member</button>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        window.onload = function() {
+            const userName = sessionStorage.getItem('userName');
+            const userHouse = sessionStorage.getItem('userHouse');
+            
+            if (!userName || !userHouse) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('userInfo').innerHTML = `${userName} | House: ${userHouse}`;
+            
+            // Set form values
+            document.getElementById('name').value = userName;
+            document.getElementById('house_no').value = userHouse;
+        };
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+        
+        function showOldDetails() {
+            const imageUrl = sessionStorage.getItem('userImage');
+            const imageElement = document.getElementById('userImage');
+            const noImageMsg = document.getElementById('noImageMsg');
+            
+            if (imageUrl && imageUrl.trim() !== '') {
+                imageElement.src = imageUrl;
+                imageElement.style.display = 'block';
+                noImageMsg.style.display = 'none';
+            } else {
+                imageElement.style.display = 'none';
+                noImageMsg.style.display = 'block';
+            }
+            
+            document.getElementById('oldDetailsModal').style.display = 'block';
+        }
+        
+        function showNewDetails() {
+            document.getElementById('newDetailsModal').style.display = 'block';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+        
+        function addMember() {
+            const container = document.getElementById('membersContainer');
+            const memberCount = container.children.length + 1;
+            
+            const memberDiv = document.createElement('div');
+            memberDiv.className = 'member-input';
+            memberDiv.innerHTML = `
+                <input type="text" placeholder="Member ${memberCount} Name" class="member-name">
+                <button type="button" class="remove-member" onclick="removeMember(this)">Remove</button>
+            `;
+            
+            container.appendChild(memberDiv);
+        }
+        
+        function removeMember(button) {
+            const memberDiv = button.parentElement;
+            memberDiv.remove();
+        }
+        
+        document.getElementById('newDetailsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                house_no: document.getElementById('house_no').value,
+                block: document.getElementById('block').value,
+                father_name: document.getElementById('father_name').value,
+                place: document.getElementById('place').value,
+                ph: document.getElementById('ph').value
+            };
+            
+            // Collect additional members
+            const members = [];
+            document.querySelectorAll('.member-name').forEach(input => {
+                if (input.value.trim() !== '') {
+                    members.push(input.value.trim());
+                }
+            });
+            
+            // Submit data (you'll need to implement this with Google Apps Script)
+            // For now, just show success message
+            alert('Form submitted successfully!\n\nData:\n' + JSON.stringify(formData, null, 2) + '\nMembers: ' + members.join(', '));
+            closeModal('newDetailsModal');
+            
+            // Reset form
+            this.reset();
+            document.getElementById('membersContainer').innerHTML = `
+                <div class="member-input">
+                    <input type="text" placeholder="Member 1 Name" class="member-name">
+                    <button type="button" class="remove-member" onclick="removeMember(this)" style="display: none;">Remove</button>
+                </div>
+            `;
+            
+            // Restore readonly fields
+            document.getElementById('name').value = sessionStorage.getItem('userName');
+            document.getElementById('house_no').value = sessionStorage.getItem('userHouse');
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
