@@ -122,11 +122,26 @@
             color: #666;
             font-size: 0.875rem;
         }
+        
+        .alert {
+            padding: 0.75rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Login</h1>
+        
+        <div id="loginAlert" class="alert alert-error"></div>
         
         <div class="form-group">
             <label for="name">Select Name</label>
@@ -162,49 +177,60 @@
         function loadCredentials() {
             const nameSelect = document.getElementById('name');
             const loader = document.getElementById('loader');
+            const alert = document.getElementById('loginAlert');
             
             loader.style.display = 'block';
             nameSelect.innerHTML = '<option value="">Loading...</option>';
+            alert.style.display = 'none';
             
             // Fetch from CSV
             fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRTwV2yxjrQAm1q4HGXhfpLlvmbc7igJbAZEuoqA2NRtGCEkBQGb2t5sHjPUik2MQiTCMhpEAxmwKsZ/pub?gid=0&single=true&output=csv')
                 .then(response => response.text())
                 .then(csvData => {
                     const lines = csvData.split('\n');
-                    const headers = lines[0].split(',');
+                    const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
                     
                     credentials = [];
                     nameToHouseMap = {};
                     
                     for (let i = 1; i < lines.length; i++) {
                         if (lines[i].trim()) {
-                            const values = lines[i].split(',');
-                            const name = values[headers.indexOf('name')]?.replace(/"/g, '').trim();
-                            const houseNo = values[headers.indexOf('house_no')]?.replace(/"/g, '').trim();
-                            const image = values[headers.indexOf('image')]?.replace(/"/g, '').trim();
-                            
-                            if (name && houseNo) {
-                                credentials.push({ name, house_no: houseNo, image });
-                                if (!nameToHouseMap[name]) {
-                                    nameToHouseMap[name] = [];
+                            // Handle CSV parsing with quotes
+                            const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+                            if (values) {
+                                const name = values[headers.indexOf('name')]?.replace(/"/g, '').trim();
+                                const houseNo = values[headers.indexOf('house_no')]?.replace(/"/g, '').trim();
+                                const image = values[headers.indexOf('image')]?.replace(/"/g, '').trim();
+                                
+                                if (name && houseNo) {
+                                    credentials.push({ name, house_no: houseNo, image });
+                                    if (!nameToHouseMap[name]) {
+                                        nameToHouseMap[name] = [];
+                                    }
+                                    nameToHouseMap[name].push(houseNo);
                                 }
-                                nameToHouseMap[name].push(houseNo);
                             }
                         }
                     }
                     
                     // Populate name dropdown
                     const uniqueNames = [...new Set(credentials.map(c => c.name))];
-                    nameSelect.innerHTML = '<option value="">Select Name</option>';
-                    uniqueNames.forEach(name => {
-                        nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
-                    });
+                    if (uniqueNames.length > 0) {
+                        nameSelect.innerHTML = '<option value="">Select Name</option>';
+                        uniqueNames.forEach(name => {
+                            nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
+                        });
+                    } else {
+                        nameSelect.innerHTML = '<option value="">No data available</option>';
+                    }
                     
                     loader.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error loading CSV:', error);
                     nameSelect.innerHTML = '<option value="">Error loading data</option>';
+                    alert.textContent = 'Failed to load user data. Please refresh the page.';
+                    alert.style.display = 'block';
                     loader.style.display = 'none';
                 });
         }
@@ -268,7 +294,8 @@
                     sessionStorage.setItem('userImage', user.image || '');
                     window.location.href = 'dashboard.html';
                 } else {
-                    alert('Invalid credentials. Please check your name and house number.');
+                    document.getElementById('loginAlert').textContent = 'Invalid credentials. Please check your name and house number.';
+                    document.getElementById('loginAlert').style.display = 'block';
                 }
             }
         }
