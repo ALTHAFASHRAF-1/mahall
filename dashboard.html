@@ -9,7 +9,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
         
         body {
@@ -17,7 +17,7 @@
             min-height: 100vh;
         }
         
-        /* Navbar */
+        /* Simplified Navbar */
         .navbar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -25,18 +25,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .user-info {
             font-size: 0.95rem;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -49,33 +46,32 @@
             color: white;
             padding: 0.4rem 1rem;
             border-radius: 50px;
-            cursor: pointer;
             font-size: 0.85rem;
             font-weight: 500;
+            cursor: pointer;
             backdrop-filter: blur(5px);
-            white-space: nowrap;
         }
         
         /* Main Container */
         .container {
-            max-width: 1200px;
-            margin: 1rem auto;
-            padding: 0 1rem;
+            padding: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
         .welcome-card {
             background: white;
             border-radius: 16px;
             padding: 1.2rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
             text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
         
         .welcome-card h2 {
-            color: #333;
             font-size: 1.3rem;
-            margin-bottom: 0.3rem;
+            color: #333;
+            margin-bottom: 0.2rem;
         }
         
         .welcome-card p {
@@ -83,12 +79,11 @@
             font-size: 0.9rem;
         }
         
-        /* Buttons Section */
+        /* Action Buttons - Stacked for mobile */
         .buttons-section {
             display: flex;
             flex-direction: column;
             gap: 0.8rem;
-            margin-bottom: 1rem;
         }
         
         .action-btn {
@@ -97,34 +92,24 @@
             border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
             width: 100%;
-            transition: all 0.2s;
+            color: white;
+            cursor: pointer;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
         
         .action-btn:active {
             transform: scale(0.98);
         }
         
-        .old-details {
-            background: linear-gradient(135deg, #667eea 0%, #5a67d8 100%);
-            color: white;
-        }
-        
-        .new-details {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-        }
-        
-        .submitted-details {
-            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-            color: white;
-        }
+        .old-details { background: linear-gradient(135deg, #667eea 0%, #5a67d8 100%); }
+        .new-details { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); }
+        .submitted-details { background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%); }
         
         /* Modal Base */
         .modal {
@@ -147,13 +132,8 @@
             width: 100%;
             height: 100%;
             background: white;
-            margin: 0;
-            padding: 0;
             border-radius: 0;
-            max-width: 100%;
-            max-height: 100%;
             overflow: hidden;
-            animation: none;
         }
         
         #oldDetailsModal .close-btn {
@@ -178,7 +158,6 @@
         .pdf-container {
             width: 100%;
             height: 100%;
-            background: #f5f5f5;
         }
         
         .pdf-container iframe {
@@ -194,36 +173,27 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #666;
-            font-size: 1rem;
             width: 80%;
         }
         
-        #noPdfMsg span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
+        #noPdfMsg span { font-size: 3rem; display: block; margin-bottom: 1rem; }
         
         /* Compact Form Modal */
         #newDetailsModal .modal-content,
         #submittedDetailsModal .modal-content {
             position: relative;
             background: white;
-            margin: 0;
-            padding: 1.2rem;
             width: 100%;
             min-height: 100%;
-            border-radius: 0;
+            padding: 1.2rem;
             overflow-y: auto;
-            max-width: 100%;
+            border-radius: 0;
         }
         
-        #newDetailsModal .close-btn,
-        #submittedDetailsModal .close-btn {
+        .close-btn {
             position: sticky;
             top: 0;
             float: right;
-            z-index: 10;
             background: #f0f0f0;
             border: none;
             width: 36px;
@@ -235,33 +205,15 @@
             justify-content: center;
             cursor: pointer;
             margin-bottom: 0.5rem;
+            z-index: 10;
         }
         
-        /* Compact Form Styles */
-        h2 {
-            font-size: 1.3rem;
-            color: #333;
-            margin-bottom: 1rem;
-            padding-right: 2rem;
-        }
+        /* Typography */
+        h2 { font-size: 1.3rem; color: #333; margin-bottom: 1rem; padding-right: 2rem; }
+        h3 { font-size: 1.1rem; color: #4a5568; margin: 1.2rem 0 0.8rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.3rem; }
+        h4 { font-size: 1rem; color: #2d3748; background: #edf2f7; padding: 0.5rem; border-radius: 6px; margin: 1rem 0; }
         
-        h3 {
-            font-size: 1.1rem;
-            color: #4a5568;
-            margin: 1.2rem 0 0.8rem 0;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 0.3rem;
-        }
-        
-        h4 {
-            font-size: 1rem;
-            color: #2d3748;
-            margin: 1rem 0 0.8rem 0;
-            background: #edf2f7;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-        }
-        
+        /* Info Cards */
         .info-card {
             background: #f7fafc;
             padding: 0.8rem;
@@ -270,29 +222,12 @@
             margin-bottom: 0.8rem;
         }
         
-        .info-card p {
-            font-size: 1rem;
-            color: #2d3748;
-            font-weight: 500;
-        }
+        .info-card strong { color: #4a5568; font-size: 0.8rem; display: block; margin-bottom: 0.2rem; }
+        .info-card p { font-size: 1rem; color: #2d3748; font-weight: 500; }
         
-        .info-card strong {
-            color: #4a5568;
-            font-size: 0.8rem;
-            display: block;
-            margin-bottom: 0.2rem;
-        }
-        
-        /* Compact Form Grid */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-            margin-bottom: 0.8rem;
-        }
-        
+        /* Form Styles - Compact for mobile */
         .form-group {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
         
         .form-group label {
@@ -303,26 +238,26 @@
             font-size: 0.8rem;
         }
         
-        .form-group input, 
-        .form-group select, 
+        .form-group input,
+        .form-group select,
         .form-group textarea {
             width: 100%;
             padding: 0.7rem;
             border: 1.5px solid #e0e0e0;
             border-radius: 8px;
             font-size: 0.9rem;
-            background-color: white;
+            background: white;
         }
         
-        .form-group input:focus, 
-        .form-group select:focus, 
+        .form-group input:focus,
+        .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 2px rgba(102,126,234,0.1);
         }
         
-        /* Compact Member Section */
+        /* Member Section */
         .member-section {
             background: #f8fafc;
             border-radius: 12px;
@@ -338,11 +273,7 @@
             margin-bottom: 0.8rem;
         }
         
-        .member-header h5 {
-            color: #2d3748;
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .member-header h5 { font-size: 1rem; color: #2d3748; }
         
         .remove-member {
             background: #f56565;
@@ -362,8 +293,8 @@
             padding: 0.8rem;
             font-size: 0.9rem;
             font-weight: 500;
-            cursor: pointer;
             width: 100%;
+            cursor: pointer;
             margin: 0.5rem 0;
         }
         
@@ -380,7 +311,7 @@
             margin-top: 1rem;
         }
         
-        /* Compact Submitted Data View */
+        /* Submitted Data View - Card based */
         .submitted-data-section {
             background: #f8fafc;
             border-radius: 12px;
@@ -388,34 +319,7 @@
             margin-bottom: 1rem;
         }
         
-        .data-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.8rem;
-        }
-        
-        .data-item {
-            background: white;
-            padding: 0.8rem;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .data-label {
-            font-size: 0.7rem;
-            color: #718096;
-            text-transform: uppercase;
-            margin-bottom: 0.2rem;
-        }
-        
-        .data-value {
-            font-size: 0.9rem;
-            color: #2d3748;
-            font-weight: 500;
-            word-break: break-word;
-        }
-        
-        .member-card {
+        .data-card {
             background: white;
             border-radius: 10px;
             padding: 1rem;
@@ -423,28 +327,51 @@
             border: 1px solid #e2e8f0;
         }
         
-        .member-card h6 {
+        .data-row {
+            display: flex;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .data-row:last-child { border-bottom: none; }
+        
+        .data-label {
+            flex: 0 0 40%;
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .data-value {
+            flex: 0 0 60%;
+            font-size: 0.9rem;
+            color: #2d3748;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        
+        .member-data-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #667eea;
+        }
+        
+        .member-data-card h6 {
             color: #4a5568;
             font-size: 0.95rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             padding-bottom: 0.3rem;
             border-bottom: 1px solid #edf2f7;
         }
         
-        /* Alert and Loader */
-        .alert {
-            padding: 0.8rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-        
+        /* Utilities */
         .loader {
             text-align: center;
             padding: 2rem;
         }
-        
         .loader:after {
             content: '';
             display: inline-block;
@@ -456,10 +383,15 @@
             animation: spin 1s linear infinite;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .alert {
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            text-align: center;
         }
+        .alert-success { background: #f0fff4; color: #22543d; border: 1px solid #9ae6b4; }
+        .alert-error { background: #fff5f5; color: #742a2a; border: 1px solid #fc8181; }
         
         .no-data-message {
             text-align: center;
@@ -467,45 +399,36 @@
             color: #888;
             font-size: 0.9rem;
         }
+        .no-data-message span { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; }
         
-        .no-data-message span {
-            font-size: 2.5rem;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
     <div class="navbar">
         <div class="user-info" id="userInfo"></div>
-        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
     </div>
     
     <div class="container">
         <div class="welcome-card">
-            <h2>Welcome</h2>
-            <p id="welcomeMessage"></p>
+            <h2 id="welcomeName"></h2>
+            <p id="welcomeHouse"></p>
         </div>
         
         <div class="buttons-section">
-            <button class="action-btn old-details" onclick="showOldDetails()">
-                <span>📄</span> View PDF
-            </button>
-            <button class="action-btn new-details" onclick="showNewDetails()">
-                <span>📝</span> New Form
-            </button>
-            <button class="action-btn submitted-details" onclick="showSubmittedDetails()">
-                <span>📋</span> Submitted Data
-            </button>
+            <button class="action-btn old-details" onclick="showOldDetails()">📄 View PDF</button>
+            <button class="action-btn new-details" onclick="showNewDetails()">📝 New Form</button>
+            <button class="action-btn submitted-details" onclick="showSubmittedDetails()">📋 Submitted Data</button>
         </div>
     </div>
     
     <!-- Full Screen PDF Modal -->
     <div id="oldDetailsModal" class="modal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal('oldDetailsModal')">×</button>
             <div class="pdf-container">
-                <iframe id="pdfViewer" src="" frameborder="0" style="display: none;"></iframe>
+                <iframe id="pdfViewer" src="" frameborder="0"></iframe>
                 <div id="noPdfMsg" style="display: none;">
                     <span>📄</span>
                     <p>No PDF document available</p>
@@ -517,14 +440,14 @@
     <!-- Compact Form Modal -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal('newDetailsModal')">×</button>
             <h2>📝 New Details</h2>
             
             <div id="formAlert" class="alert"></div>
             <div id="formLoader" class="loader"></div>
             
             <form id="newDetailsForm">
-                <!-- Basic Info -->
+                <!-- User Info -->
                 <div class="info-card">
                     <strong>Name</strong>
                     <p id="displayName"></p>
@@ -535,6 +458,7 @@
                 </div>
 
                 <h3>Basic Information</h3>
+                
                 <div class="form-group">
                     <label>Block</label>
                     <input type="text" id="block" placeholder="Block number">
@@ -573,18 +497,20 @@
                 <div class="form-group">
                     <label>House Type</label>
                     <select id="houseType">
-                        <option value="">Select type</option>
+                        <option value="">Select</option>
                         <option value="Own">Own</option>
                         <option value="Rented">Rented</option>
+                        <option value="Leased">Leased</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label>Gender</label>
                     <select id="gender">
-                        <option value="">Select gender</option>
+                        <option value="">Select</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 
@@ -646,10 +572,10 @@
         </div>
     </div>
     
-    <!-- Submitted Data Modal -->
+    <!-- Submitted Details Modal -->
     <div id="submittedDetailsModal" class="modal">
         <div class="modal-content">
-            <button class="close-btn" onclick="closeModal('submittedDetailsModal')">&times;</button>
+            <button class="close-btn" onclick="closeModal('submittedDetailsModal')">×</button>
             <h2>📋 Submitted Data</h2>
             
             <div id="submittedLoader" class="loader"></div>
@@ -661,11 +587,13 @@
                     <p id="submittedHouseNo"></p>
                 </div>
                 
+                <!-- Main Member Data -->
                 <div id="mainMemberContainer" class="submitted-data-section">
-                    <h4>Main Member</h4>
-                    <div id="mainMemberData" class="data-grid"></div>
+                    <h4>Main Member Details</h4>
+                    <div id="mainMemberData" class="data-card"></div>
                 </div>
                 
+                <!-- Additional Members -->
                 <div id="additionalMembersContainer" class="submitted-data-section">
                     <h4>Family Members</h4>
                     <div id="additionalMembersData"></div>
@@ -694,8 +622,9 @@
                 return;
             }
             
-            document.getElementById('userInfo').innerHTML = `${userName}`;
-            document.getElementById('welcomeMessage').innerHTML = `House ${userHouse}`;
+            document.getElementById('userInfo').innerHTML = `${userName} | House ${userHouse}`;
+            document.getElementById('welcomeName').innerHTML = `Welcome, ${userName}`;
+            document.getElementById('welcomeHouse').innerHTML = `House No: ${userHouse}`;
             document.getElementById('displayName').textContent = userName;
             document.getElementById('displayHouseNo').textContent = userHouse;
         };
@@ -737,6 +666,7 @@
             document.getElementById('newDetailsModal').style.display = 'block';
         }
         
+        // Submitted Details with CSV Headers
         function showSubmittedDetails() {
             const modal = document.getElementById('submittedDetailsModal');
             const loader = document.getElementById('submittedLoader');
@@ -756,14 +686,13 @@
                     const lines = csvData.split('\n');
                     const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
                     
-                    const houseNoIndex = headers.indexOf('House No');
-                    const memberTypeIndex = headers.indexOf('Member Type');
+                    const houseNoIndex = headers.indexOf('house_no');
                     
                     const allRows = [];
                     for (let i = 1; i < lines.length; i++) {
                         if (lines[i].trim()) {
-                            const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
-                            if (values && values[houseNoIndex]?.replace(/"/g, '').trim() === houseNo) {
+                            const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g) || [];
+                            if (values[houseNoIndex]?.replace(/"/g, '').trim() === houseNo) {
                                 const row = {};
                                 headers.forEach((header, index) => {
                                     row[header] = values[index]?.replace(/"/g, '').trim() || '';
@@ -793,76 +722,71 @@
         }
         
         function displaySubmittedData(rows) {
-            const mainMember = rows.find(row => row['Member Type'] === 'Main Member') || {};
-            const additionalMembers = rows.filter(row => row['Member Type'] === 'Additional Member');
+            // Main member (first row with member type = main member or first row)
+            const mainMember = rows[0] || {};
+            const additionalMembers = rows.slice(1); // Remaining rows are additional members
             
+            // Display main member data
             const mainContainer = document.getElementById('mainMemberData');
             mainContainer.innerHTML = '';
             
             const mainFields = [
-                'Name', 'Block', 'Grade', 'Mobile', 'House Holder', 'House Name',
-                'Father Name', 'Place', 'House Type', 'Gender', 'Postal Address',
-                'Ration Card', 'Division', 'Ward', 'Building No', 'Old House No',
-                'Madrasa', 'Any Grant', 'Donation'
+                'Time', 'name', 'house_no', 'Block', 'Grade', 'Mobile', 'House Holder',
+                'House Name', 'Father Name', 'Place', 'House Type', 'Gender',
+                'Postal Address', 'Ration Card', 'Division', 'Ward', 'Building No',
+                'Old House No', 'Madrasa', 'Any Grant?', 'Donation'
             ];
             
             mainFields.forEach(field => {
                 if (mainMember[field]) {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'data-item';
-                    itemDiv.innerHTML = `
+                    const row = document.createElement('div');
+                    row.className = 'data-row';
+                    row.innerHTML = `
                         <div class="data-label">${field}</div>
                         <div class="data-value">${mainMember[field]}</div>
                     `;
-                    mainContainer.appendChild(itemDiv);
+                    mainContainer.appendChild(row);
                 }
             });
             
+            // Display additional members
             const additionalContainer = document.getElementById('additionalMembersData');
             additionalContainer.innerHTML = '';
             
             if (additionalMembers.length > 0) {
                 additionalMembers.forEach((member, index) => {
                     const memberCard = document.createElement('div');
-                    memberCard.className = 'member-card';
+                    memberCard.className = 'member-data-card';
                     
                     const memberFields = [
-                        'Member Name', 'Member Gender', 'Member Relation', 'Member DOB',
-                        'Member Age', 'Member Father Name', 'Member Education', 'Member Job',
-                        'Member Health', 'Member Marriage Status', 'Member Blood Group', 'Member Mobile'
+                        'Name', 'Gender', 'Relation to house holder', 'DOB', 'Age',
+                        'Father name', 'Education', 'Job', 'Health', 'Marriage status',
+                        'Blood group', 'Mobile'
                     ];
                     
-                    let fieldsHtml = '';
+                    let html = `<h6>Member ${index + 1}</h6>`;
                     memberFields.forEach(field => {
                         if (member[field]) {
-                            fieldsHtml += `
-                                <div style="margin-bottom: 0.5rem;">
-                                    <div class="data-label">${field.replace('Member ', '')}</div>
+                            html += `
+                                <div class="data-row">
+                                    <div class="data-label">${field}</div>
                                     <div class="data-value">${member[field]}</div>
                                 </div>
                             `;
                         }
                     });
                     
-                    memberCard.innerHTML = `
-                        <h6>Member ${index + 1}</h6>
-                        ${fieldsHtml}
-                    `;
-                    
+                    memberCard.innerHTML = html;
                     additionalContainer.appendChild(memberCard);
                 });
-                
-                document.getElementById('additionalMembersContainer').style.display = 'block';
             } else {
                 additionalContainer.innerHTML = '<p style="color: #888; text-align: center;">No family members</p>';
             }
-            
-            document.getElementById('mainMemberContainer').style.display = 'block';
-            document.getElementById('noSubmittedData').style.display = 'none';
         }
         
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
+            document.getElementById('formAlert').style.display = 'none';
         }
         
         // Member functions
@@ -889,14 +813,15 @@
                         <option value="">Select</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Relation</label>
+                    <label>Relation to house holder</label>
                     <input type="text" id="member${memberCount}_relation" placeholder="Relation">
                 </div>
                 <div class="form-group">
-                    <label>Date of Birth</label>
+                    <label>DOB</label>
                     <input type="date" id="member${memberCount}_dob">
                 </div>
                 <div class="form-group">
@@ -904,7 +829,7 @@
                     <input type="number" id="member${memberCount}_age" placeholder="Age">
                 </div>
                 <div class="form-group">
-                    <label>Father's Name</label>
+                    <label>Father name</label>
                     <input type="text" id="member${memberCount}_fatherName" placeholder="Father's name">
                 </div>
                 <div class="form-group">
@@ -925,7 +850,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Marriage Status</label>
+                    <label>Marriage status</label>
                     <select id="member${memberCount}_marriage">
                         <option value="">Select</option>
                         <option value="Married">Married</option>
@@ -933,7 +858,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Blood Group</label>
+                    <label>Blood group</label>
                     <select id="member${memberCount}_bloodGroup">
                         <option value="">Select</option>
                         <option value="A+">A+</option>
@@ -988,45 +913,45 @@
             e.preventDefault();
             
             const formData = {
-                timestamp: new Date().toISOString(),
+                timestamp: new Date().toLocaleString(),
                 name: document.getElementById('displayName').textContent,
                 house_no: document.getElementById('displayHouseNo').textContent,
-                block: document.getElementById('block').value,
-                grade: document.getElementById('grade').value,
-                mobile: document.getElementById('mobile').value,
-                house_holder: document.getElementById('houseHolder').value,
-                house_name: document.getElementById('houseName').value,
-                father_name: document.getElementById('fatherName').value,
-                place: document.getElementById('place').value,
-                house_type: document.getElementById('houseType').value,
-                gender: document.getElementById('gender').value,
-                postal_address: document.getElementById('postalAddress').value,
-                ration_card: document.getElementById('rationCard').value,
-                division: document.getElementById('division').value,
-                ward: document.getElementById('ward').value,
-                building_no: document.getElementById('buildingNo').value,
-                old_house_no: document.getElementById('oldHouseNo').value,
-                madrasa: document.getElementById('madrasa').value,
-                any_grant: document.getElementById('anyGrant').value,
-                donation: document.getElementById('donation').value
+                Block: document.getElementById('block').value,
+                Grade: document.getElementById('grade').value,
+                Mobile: document.getElementById('mobile').value,
+                'House Holder': document.getElementById('houseHolder').value,
+                'House Name': document.getElementById('houseName').value,
+                'Father Name': document.getElementById('fatherName').value,
+                Place: document.getElementById('place').value,
+                'House Type': document.getElementById('houseType').value,
+                Gender: document.getElementById('gender').value,
+                'Postal Address': document.getElementById('postalAddress').value,
+                'Ration Card': document.getElementById('rationCard').value,
+                Division: document.getElementById('division').value,
+                Ward: document.getElementById('ward').value,
+                'Building No': document.getElementById('buildingNo').value,
+                'Old House No': document.getElementById('oldHouseNo').value,
+                Madrasa: document.getElementById('madrasa').value,
+                'Any Grant?': document.getElementById('anyGrant').value,
+                Donation: document.getElementById('donation').value
             };
             
             const members = [];
             for (let i = 1; i <= memberCount; i++) {
                 if (document.getElementById(`member_${i}`)) {
                     members.push({
-                        name: document.getElementById(`member${i}_name`)?.value || '',
-                        gender: document.getElementById(`member${i}_gender`)?.value || '',
-                        relation: document.getElementById(`member${i}_relation`)?.value || '',
-                        dob: document.getElementById(`member${i}_dob`)?.value || '',
-                        age: document.getElementById(`member${i}_age`)?.value || '',
-                        father_name: document.getElementById(`member${i}_fatherName`)?.value || '',
-                        education: document.getElementById(`member${i}_education`)?.value || '',
-                        job: document.getElementById(`member${i}_job`)?.value || '',
-                        health: document.getElementById(`member${i}_health`)?.value || '',
-                        marriage: document.getElementById(`member${i}_marriage`)?.value || '',
-                        blood_group: document.getElementById(`member${i}_bloodGroup`)?.value || '',
-                        mobile: document.getElementById(`member${i}_mobile`)?.value || ''
+                        Name: document.getElementById(`member${i}_name`)?.value || '',
+                        Gender: document.getElementById(`member${i}_gender`)?.value || '',
+                        'Relation to house holder': document.getElementById(`member${i}_relation`)?.value || '',
+                        DOB: document.getElementById(`member${i}_dob`)?.value || '',
+                        Age: document.getElementById(`member${i}_age`)?.value || '',
+                        'Father name': document.getElementById(`member${i}_fatherName`)?.value || '',
+                        Education: document.getElementById(`member${i}_education`)?.value || '',
+                        Job: document.getElementById(`member${i}_job`)?.value || '',
+                        Health: document.getElementById(`member${i}_health`)?.value || '',
+                        'Marriage status': document.getElementById(`member${i}_marriage`)?.value || '',
+                        'Blood group': document.getElementById(`member${i}_bloodGroup`)?.value || '',
+                        Mobile: document.getElementById(`member${i}_mobile`)?.value || ''
                     });
                 }
             }
@@ -1041,7 +966,11 @@
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'submitDetails', formData, members })
+                    body: JSON.stringify({ 
+                        action: 'submitDetails', 
+                        mainData: formData,
+                        members: members 
+                    })
                 });
                 
                 showAlert('✅ Submitted!', 'success');
