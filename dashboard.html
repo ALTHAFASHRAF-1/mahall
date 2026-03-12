@@ -39,23 +39,12 @@
             }
         }
         
-        @media (max-width: 480px) {
-            .navbar {
-                padding: 0.75rem;
-            }
-        }
-        
         .user-info {
             font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-        
-        .user-info::before {
-            content: '👤';
-            font-size: 1.3rem;
         }
         
         .logout-btn {
@@ -67,36 +56,19 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
             backdrop-filter: blur(5px);
-        }
-        
-        @media (max-width: 768px) {
-            .logout-btn {
-                width: 100%;
-                max-width: 200px;
-            }
         }
         
         .logout-btn:hover {
             background: rgba(255,255,255,0.25);
             border-color: rgba(255,255,255,0.5);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
         
         .container {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1.5rem;
-        }
-        
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-                margin: 1rem auto;
-            }
         }
         
         .welcome-card {
@@ -106,29 +78,6 @@
             margin-bottom: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             text-align: center;
-            animation: slideDown 0.5s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .welcome-card h2 {
-            color: #333;
-            font-size: clamp(1.3rem, 5vw, 1.8rem);
-            margin-bottom: 0.5rem;
-        }
-        
-        .welcome-card p {
-            color: #666;
-            font-size: 1rem;
         }
         
         .buttons-section {
@@ -137,12 +86,6 @@
             justify-content: center;
             margin-bottom: 2rem;
             flex-wrap: wrap;
-        }
-        
-        @media (max-width: 640px) {
-            .buttons-section {
-                gap: 1rem;
-            }
         }
         
         .action-btn {
@@ -167,7 +110,6 @@
         @media (max-width: 480px) {
             .action-btn {
                 min-width: 100%;
-                padding: 1rem;
             }
         }
         
@@ -192,22 +134,21 @@
         .old-details {
             background: linear-gradient(135deg, #667eea 0%, #5a67d8 100%);
             color: white;
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
         .new-details {
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .submitted-details {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
         }
         
         .action-btn:hover {
             transform: translateY(-5px) scale(1.02);
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        }
-        
-        .action-btn:active {
-            transform: translateY(0);
         }
         
         .modal {
@@ -220,14 +161,8 @@
             background: rgba(0,0,0,0.5);
             z-index: 1000;
             backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s ease;
             overflow-y: auto;
             padding: 1rem;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
         
         .modal-content {
@@ -241,32 +176,6 @@
             overflow-y: auto;
             border-radius: 30px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            animation: slideUp 0.4s ease;
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .modal-content {
-                margin: 1rem auto;
-                padding: 1.5rem;
-                width: 95%;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 1.25rem;
-            }
         }
         
         .close-btn {
@@ -276,7 +185,6 @@
             font-size: 1.8rem;
             cursor: pointer;
             color: #999;
-            transition: all 0.3s;
             background: none;
             border: none;
             width: 40px;
@@ -288,33 +196,20 @@
             background: #f0f0f0;
         }
         
-        @media (max-width: 480px) {
-            .close-btn {
-                top: 1rem;
-                right: 1rem;
-                width: 35px;
-                height: 35px;
-                font-size: 1.5rem;
-            }
-        }
-        
         .close-btn:hover {
             color: #f56565;
             transform: rotate(90deg);
-            background: #fee;
         }
         
         h2 {
             color: #333;
             margin-bottom: 2rem;
-            font-size: clamp(1.3rem, 5vw, 1.8rem);
             padding-right: 2rem;
         }
         
         h3 {
             color: #4a5568;
             margin: 1.5rem 0 1rem 0;
-            font-size: 1.3rem;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 0.5rem;
         }
@@ -322,12 +217,12 @@
         h4 {
             color: #2d3748;
             margin: 1.5rem 0 1rem 0;
-            font-size: 1.1rem;
             background: #edf2f7;
             padding: 0.5rem 1rem;
             border-radius: 8px;
         }
         
+        /* PDF Viewer Styles */
         .pdf-container {
             text-align: center;
             margin: 1.5rem 0;
@@ -335,9 +230,6 @@
             background: #f9f9f9;
             border-radius: 20px;
             min-height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .pdf-container iframe {
@@ -345,7 +237,6 @@
             height: 600px;
             border: none;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
         
         @media (max-width: 768px) {
@@ -370,12 +261,7 @@
             text-align: center;
         }
         
-        #noPdfMsg span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
-        
+        /* Form Styles - All fields non-required */
         .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -411,13 +297,7 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        .form-group input[readonly] {
-            background-color: #f7fafc;
-            cursor: not-allowed;
-            border-color: #ddd;
-            color: #666;
-        }
-        
+        /* Member Section Styles */
         .member-section {
             background: #f8fafc;
             border-radius: 15px;
@@ -449,13 +329,11 @@
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
-            font-size: 0.9rem;
         }
         
         .remove-member:hover {
             background: #c53030;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(197, 48, 48, 0.3);
         }
         
         .add-member {
@@ -468,14 +346,12 @@
             margin: 1rem 0;
             transition: all 0.3s;
             font-weight: 600;
-            font-size: 1rem;
             width: 100%;
         }
         
         .add-member:hover {
             background: #5a67d8;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
         
         .submit-btn {
@@ -490,8 +366,6 @@
             cursor: pointer;
             margin-top: 2rem;
             transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
         
         .submit-btn:hover {
@@ -499,11 +373,59 @@
             box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
         }
         
-        .submit-btn:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        /* Submitted Details View Styles */
+        .submitted-data-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .data-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .data-label {
+            font-size: 0.8rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+        
+        .data-value {
+            font-size: 1rem;
+            color: #2d3748;
+            font-weight: 600;
+            word-break: break-word;
+        }
+        
+        .member-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .member-card h6 {
+            color: #4a5568;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #edf2f7;
         }
         
         .alert {
@@ -513,7 +435,6 @@
             display: none;
             font-weight: 500;
             text-align: center;
-            animation: slideIn 0.3s ease;
         }
         
         .alert-success {
@@ -570,41 +491,14 @@
             font-weight: 600;
         }
         
-        .radio-group {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: normal;
-            color: #4a5568;
-            cursor: pointer;
-        }
-        
-        .radio-group input[type="radio"] {
-            width: auto;
-            margin-right: 0.25rem;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        @keyframes slideOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100%);
-            }
+        .no-data-message {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
+            font-size: 1.1rem;
+            background: #f8fafc;
+            border-radius: 15px;
+            border: 2px dashed #e2e8f0;
         }
     </style>
 </head>
@@ -617,7 +511,7 @@
     <div class="container">
         <div class="welcome-card">
             <h2>Welcome to Dashboard</h2>
-            <p>Choose an option below to view or update your details</p>
+            <p>Choose an option below</p>
         </div>
         
         <div class="buttons-section">
@@ -626,6 +520,9 @@
             </button>
             <button class="action-btn new-details" onclick="showNewDetails()">
                 <span>📝</span> New Details Form
+            </button>
+            <button class="action-btn submitted-details" onclick="showSubmittedDetails()">
+                <span>📋</span> Submitted Details
             </button>
         </div>
     </div>
@@ -645,11 +542,11 @@
         </div>
     </div>
     
-    <!-- New Details Modal - Comprehensive Form -->
+    <!-- New Details Modal - Form (All fields non-required) -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
-            <h2>📝 Complete Details Form</h2>
+            <h2>📝 Details Form (All fields optional)</h2>
             
             <div id="formAlert" class="alert"></div>
             <div id="formLoader" class="loader"></div>
@@ -667,47 +564,47 @@
                     </div>
                 </div>
 
-                <!-- Main Form Fields -->
+                <!-- Main Form Fields - All non-required -->
                 <h3>🏠 Basic Information</h3>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="block">Block *</label>
-                        <input type="text" id="block" required placeholder="Enter block (e.g., A)">
+                        <label for="block">Block</label>
+                        <input type="text" id="block" placeholder="Enter block (e.g., A)">
                     </div>
                     
                     <div class="form-group">
-                        <label for="grade">Grade *</label>
-                        <input type="text" id="grade" required placeholder="Enter grade">
+                        <label for="grade">Grade</label>
+                        <input type="text" id="grade" placeholder="Enter grade">
                     </div>
                     
                     <div class="form-group">
-                        <label for="mobile">Mobile Number *</label>
-                        <input type="tel" id="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10">
+                        <label for="mobile">Mobile Number</label>
+                        <input type="tel" id="mobile" placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseHolder">House Holder Name *</label>
-                        <input type="text" id="houseHolder" required placeholder="Enter house holder name">
+                        <label for="houseHolder">House Holder Name</label>
+                        <input type="text" id="houseHolder" placeholder="Enter house holder name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseName">House Name *</label>
-                        <input type="text" id="houseName" required placeholder="Enter house name">
+                        <label for="houseName">House Name</label>
+                        <input type="text" id="houseName" placeholder="Enter house name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="fatherName">Father's Name *</label>
-                        <input type="text" id="fatherName" required placeholder="Enter father's name">
+                        <label for="fatherName">Father's Name</label>
+                        <input type="text" id="fatherName" placeholder="Enter father's name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="place">Place *</label>
-                        <input type="text" id="place" required placeholder="Enter place">
+                        <label for="place">Place</label>
+                        <input type="text" id="place" placeholder="Enter place">
                     </div>
                     
                     <div class="form-group">
-                        <label for="houseType">House Type *</label>
-                        <select id="houseType" required>
+                        <label for="houseType">House Type</label>
+                        <select id="houseType">
                             <option value="">Select house type</option>
                             <option value="Own">Own</option>
                             <option value="Rented">Rented</option>
@@ -716,8 +613,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select id="gender" required>
+                        <label for="gender">Gender</label>
+                        <select id="gender">
                             <option value="">Select gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -726,43 +623,43 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="postalAddress">Postal Address *</label>
-                        <textarea id="postalAddress" required placeholder="Enter complete postal address" rows="2"></textarea>
+                        <label for="postalAddress">Postal Address</label>
+                        <textarea id="postalAddress" placeholder="Enter complete postal address" rows="2"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="rationCard">Ration Card No *</label>
-                        <input type="text" id="rationCard" required placeholder="Enter ration card number">
+                        <label for="rationCard">Ration Card No</label>
+                        <input type="text" id="rationCard" placeholder="Enter ration card number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="division">Division *</label>
-                        <input type="text" id="division" required placeholder="Enter division">
+                        <label for="division">Division</label>
+                        <input type="text" id="division" placeholder="Enter division">
                     </div>
                     
                     <div class="form-group">
-                        <label for="ward">Ward *</label>
-                        <input type="text" id="ward" required placeholder="Enter ward">
+                        <label for="ward">Ward</label>
+                        <input type="text" id="ward" placeholder="Enter ward">
                     </div>
                     
                     <div class="form-group">
-                        <label for="buildingNo">Building No *</label>
-                        <input type="text" id="buildingNo" required placeholder="Enter building number">
+                        <label for="buildingNo">Building No</label>
+                        <input type="text" id="buildingNo" placeholder="Enter building number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="oldHouseNo">Old House No *</label>
-                        <input type="text" id="oldHouseNo" required placeholder="Enter old house number">
+                        <label for="oldHouseNo">Old House No</label>
+                        <input type="text" id="oldHouseNo" placeholder="Enter old house number">
                     </div>
                     
                     <div class="form-group">
-                        <label for="madrasa">Madrasa *</label>
-                        <input type="text" id="madrasa" required placeholder="Enter madrasa name">
+                        <label for="madrasa">Madrasa</label>
+                        <input type="text" id="madrasa" placeholder="Enter madrasa name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="anyGrant">Any Grant? *</label>
-                        <select id="anyGrant" required>
+                        <label for="anyGrant">Any Grant?</label>
+                        <select id="anyGrant">
                             <option value="">Select</option>
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
@@ -770,8 +667,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="donation">Donation *</label>
-                        <input type="text" id="donation" required placeholder="Enter donation amount/details">
+                        <label for="donation">Donation</label>
+                        <input type="text" id="donation" placeholder="Enter donation amount/details">
                     </div>
                 </div>
 
@@ -784,10 +681,48 @@
             </form>
         </div>
     </div>
+    
+    <!-- Submitted Details Modal - View Data from CSV -->
+    <div id="submittedDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('submittedDetailsModal')">&times;</button>
+            <h2>📋 Submitted Details</h2>
+            
+            <div id="submittedLoader" class="loader"></div>
+            <div id="submittedAlert" class="alert alert-error"></div>
+            
+            <div id="submittedContent" style="display: none;">
+                <div class="info-card" style="margin-bottom: 1.5rem;">
+                    <p><strong>House No:</strong> <span id="submittedHouseNo"></span></p>
+                </div>
+                
+                <!-- Main Member Details -->
+                <div id="mainMemberContainer" class="submitted-data-section">
+                    <h4>👤 Main Member Details</h4>
+                    <div id="mainMemberData" class="data-grid"></div>
+                </div>
+                
+                <!-- Additional Members -->
+                <div id="additionalMembersContainer" class="submitted-data-section">
+                    <h4>👥 Additional Family Members</h4>
+                    <div id="additionalMembersData"></div>
+                </div>
+                
+                <!-- No Data Message -->
+                <div id="noSubmittedData" class="no-data-message" style="display: none;">
+                    <span style="font-size: 3rem;">📭</span>
+                    <p>No submitted details found for this house number</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYAUGReghNUxw9ilwe1wdlwFAz8PpjXR4zOaial6Q1LeiA4jmdHMcVXnp5XnVYl5UARA/exec';
+        const RESPONSES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTwV2yxjrQAm1q4HGXhfpLlvmbc7igJbAZEuoqA2NRtGCEkBQGb2t5sHjPUik2MQiTCMhpEAxmwKsZ/pub?gid=1513156590&single=true&output=csv';
+        
         let memberCount = 0;
+        let submittedData = [];
         
         window.onload = function() {
             const userName = sessionStorage.getItem('userName');
@@ -814,13 +749,13 @@
             }, 500);
         }
         
+        // Old Details - PDF Viewer
         function showOldDetails() {
             const pdfUrl = sessionStorage.getItem('userPdfUrl');
             const pdfViewer = document.getElementById('pdfViewer');
             const noPdfMsg = document.getElementById('noPdfMsg');
             
             if (pdfUrl && pdfUrl.trim() !== '') {
-                // Convert to preview URL if it's a Google Drive link
                 let previewUrl = pdfUrl;
                 if (pdfUrl.includes('drive.google.com/file/d/')) {
                     const fileId = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
@@ -841,11 +776,144 @@
             document.body.style.overflow = 'hidden';
         }
         
+        // New Details - Form
         function showNewDetails() {
             memberCount = 0;
             document.getElementById('membersContainer').innerHTML = '';
             document.getElementById('newDetailsModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
+        }
+        
+        // Submitted Details - View from CSV
+        function showSubmittedDetails() {
+            const modal = document.getElementById('submittedDetailsModal');
+            const loader = document.getElementById('submittedLoader');
+            const content = document.getElementById('submittedContent');
+            const alert = document.getElementById('submittedAlert');
+            const houseNo = sessionStorage.getItem('userHouse');
+            
+            // Reset and show modal with loader
+            document.getElementById('submittedHouseNo').textContent = houseNo;
+            content.style.display = 'none';
+            alert.style.display = 'none';
+            loader.style.display = 'block';
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            
+            // Fetch and filter data
+            fetch(RESPONSES_CSV_URL)
+                .then(response => response.text())
+                .then(csvData => {
+                    const lines = csvData.split('\n');
+                    const headers = lines[0].split(',').map(h => h.replace(/"/g, '').trim());
+                    
+                    // Filter rows for current house number
+                    const houseNoIndex = headers.indexOf('House No');
+                    const memberTypeIndex = headers.indexOf('Member Type');
+                    
+                    const allRows = [];
+                    for (let i = 1; i < lines.length; i++) {
+                        if (lines[i].trim()) {
+                            const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
+                            if (values && values[houseNoIndex]?.replace(/"/g, '').trim() === houseNo) {
+                                const row = {};
+                                headers.forEach((header, index) => {
+                                    row[header] = values[index]?.replace(/"/g, '').trim() || '';
+                                });
+                                allRows.push(row);
+                            }
+                        }
+                    }
+                    
+                    loader.style.display = 'none';
+                    
+                    if (allRows.length > 0) {
+                        displaySubmittedData(allRows);
+                        content.style.display = 'block';
+                    } else {
+                        document.getElementById('noSubmittedData').style.display = 'block';
+                        document.getElementById('mainMemberContainer').style.display = 'none';
+                        document.getElementById('additionalMembersContainer').style.display = 'none';
+                        content.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading submitted data:', error);
+                    loader.style.display = 'none';
+                    alert.textContent = '❌ Failed to load submitted details. Please try again.';
+                    alert.style.display = 'block';
+                });
+        }
+        
+        function displaySubmittedData(rows) {
+            const mainMember = rows.find(row => row['Member Type'] === 'Main Member') || {};
+            const additionalMembers = rows.filter(row => row['Member Type'] === 'Additional Member');
+            
+            // Display main member data
+            const mainContainer = document.getElementById('mainMemberData');
+            mainContainer.innerHTML = '';
+            
+            const mainFields = [
+                'Name', 'Block', 'Grade', 'Mobile', 'House Holder', 'House Name',
+                'Father Name', 'Place', 'House Type', 'Gender', 'Postal Address',
+                'Ration Card', 'Division', 'Ward', 'Building No', 'Old House No',
+                'Madrasa', 'Any Grant', 'Donation'
+            ];
+            
+            mainFields.forEach(field => {
+                if (mainMember[field]) {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'data-item';
+                    itemDiv.innerHTML = `
+                        <div class="data-label">${field}</div>
+                        <div class="data-value">${mainMember[field]}</div>
+                    `;
+                    mainContainer.appendChild(itemDiv);
+                }
+            });
+            
+            // Display additional members
+            const additionalContainer = document.getElementById('additionalMembersData');
+            additionalContainer.innerHTML = '';
+            
+            if (additionalMembers.length > 0) {
+                additionalMembers.forEach((member, index) => {
+                    const memberCard = document.createElement('div');
+                    memberCard.className = 'member-card';
+                    
+                    const memberFields = [
+                        'Member Name', 'Member Gender', 'Member Relation', 'Member DOB',
+                        'Member Age', 'Member Father Name', 'Member Education', 'Member Job',
+                        'Member Health', 'Member Marriage Status', 'Member Blood Group', 'Member Mobile'
+                    ];
+                    
+                    let fieldsHtml = '';
+                    memberFields.forEach(field => {
+                        if (member[field]) {
+                            fieldsHtml += `
+                                <div style="margin-bottom: 0.5rem;">
+                                    <div class="data-label">${field.replace('Member ', '')}</div>
+                                    <div class="data-value">${member[field]}</div>
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    memberCard.innerHTML = `
+                        <h6>👤 Member ${index + 1}</h6>
+                        ${fieldsHtml}
+                    `;
+                    
+                    additionalContainer.appendChild(memberCard);
+                });
+                
+                document.getElementById('additionalMembersContainer').style.display = 'block';
+            } else {
+                additionalContainer.innerHTML = '<p style="color: #888; text-align: center;">No additional family members</p>';
+            }
+            
+            document.getElementById('mainMemberContainer').style.display = 'block';
+            document.getElementById('noSubmittedData').style.display = 'none';
         }
         
         function closeModal(modalId) {
@@ -854,6 +922,7 @@
             document.getElementById('formAlert').style.display = 'none';
         }
         
+        // Member functions for new form
         function addMember() {
             memberCount++;
             const container = document.getElementById('membersContainer');
@@ -869,13 +938,13 @@
                 </div>
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="member${memberCount}_name">Name *</label>
-                        <input type="text" id="member${memberCount}_name" class="member-name" required placeholder="Enter full name">
+                        <label for="member${memberCount}_name">Name</label>
+                        <input type="text" id="member${memberCount}_name" class="member-name" placeholder="Enter full name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_gender">Gender *</label>
-                        <select id="member${memberCount}_gender" class="member-gender" required>
+                        <label for="member${memberCount}_gender">Gender</label>
+                        <select id="member${memberCount}_gender" class="member-gender">
                             <option value="">Select gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -884,38 +953,38 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_relation">Relation to House Holder *</label>
-                        <input type="text" id="member${memberCount}_relation" class="member-relation" required placeholder="e.g., Son, Daughter, Wife">
+                        <label for="member${memberCount}_relation">Relation to House Holder</label>
+                        <input type="text" id="member${memberCount}_relation" class="member-relation" placeholder="e.g., Son, Daughter, Wife">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_dob">Date of Birth *</label>
-                        <input type="date" id="member${memberCount}_dob" class="member-dob" required>
+                        <label for="member${memberCount}_dob">Date of Birth</label>
+                        <input type="date" id="member${memberCount}_dob" class="member-dob">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_age">Age *</label>
-                        <input type="number" id="member${memberCount}_age" class="member-age" required placeholder="Age in years" min="0" max="120">
+                        <label for="member${memberCount}_age">Age</label>
+                        <input type="number" id="member${memberCount}_age" class="member-age" placeholder="Age in years" min="0" max="120">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_fatherName">Father's Name *</label>
-                        <input type="text" id="member${memberCount}_fatherName" class="member-fatherName" required placeholder="Enter father's name">
+                        <label for="member${memberCount}_fatherName">Father's Name</label>
+                        <input type="text" id="member${memberCount}_fatherName" class="member-fatherName" placeholder="Enter father's name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_education">Education *</label>
-                        <input type="text" id="member${memberCount}_education" class="member-education" required placeholder="Enter education qualification">
+                        <label for="member${memberCount}_education">Education</label>
+                        <input type="text" id="member${memberCount}_education" class="member-education" placeholder="Enter education qualification">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_job">Job *</label>
-                        <input type="text" id="member${memberCount}_job" class="member-job" required placeholder="Enter occupation">
+                        <label for="member${memberCount}_job">Job</label>
+                        <input type="text" id="member${memberCount}_job" class="member-job" placeholder="Enter occupation">
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_health">Health Status *</label>
-                        <select id="member${memberCount}_health" class="member-health" required>
+                        <label for="member${memberCount}_health">Health Status</label>
+                        <select id="member${memberCount}_health" class="member-health">
                             <option value="">Select health status</option>
                             <option value="Good">Good</option>
                             <option value="Average">Average</option>
@@ -925,8 +994,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_marriage">Marriage Status *</label>
-                        <select id="member${memberCount}_marriage" class="member-marriage" required>
+                        <label for="member${memberCount}_marriage">Marriage Status</label>
+                        <select id="member${memberCount}_marriage" class="member-marriage">
                             <option value="">Select status</option>
                             <option value="Married">Married</option>
                             <option value="Unmarried">Unmarried</option>
@@ -936,8 +1005,8 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="member${memberCount}_bloodGroup">Blood Group *</label>
-                        <select id="member${memberCount}_bloodGroup" class="member-bloodGroup" required>
+                        <label for="member${memberCount}_bloodGroup">Blood Group</label>
+                        <select id="member${memberCount}_bloodGroup" class="member-bloodGroup">
                             <option value="">Select blood group</option>
                             <option value="A+">A+</option>
                             <option value="A-">A-</option>
@@ -959,9 +1028,6 @@
             
             container.appendChild(memberDiv);
             
-            // Add animation
-            memberDiv.style.animation = 'slideIn 0.3s ease';
-            
             // Auto-calculate age from DOB
             const dobInput = document.getElementById(`member${memberCount}_dob`);
             const ageInput = document.getElementById(`member${memberCount}_age`);
@@ -982,11 +1048,8 @@
         
         function removeMember(button) {
             const memberDiv = button.closest('.member-section');
-            memberDiv.style.animation = 'slideOut 0.3s ease';
-            setTimeout(() => {
-                memberDiv.remove();
-                memberCount--;
-            }, 200);
+            memberDiv.remove();
+            memberCount--;
         }
         
         function showAlert(message, type) {
@@ -1000,24 +1063,18 @@
             }, 5000);
         }
         
+        // Form submission (all fields optional now)
         document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Validate mobile
-            const mobile = document.getElementById('mobile').value;
-            if (!/^\d{10}$/.test(mobile)) {
-                showAlert('❌ Please enter a valid 10-digit mobile number', 'error');
-                return;
-            }
-            
-            // Collect main form data
+            // Collect main form data (all fields optional)
             const formData = {
                 timestamp: new Date().toISOString(),
                 name: document.getElementById('displayName').textContent,
                 house_no: document.getElementById('displayHouseNo').textContent,
                 block: document.getElementById('block').value,
                 grade: document.getElementById('grade').value,
-                mobile: mobile,
+                mobile: document.getElementById('mobile').value,
                 house_holder: document.getElementById('houseHolder').value,
                 house_name: document.getElementById('houseName').value,
                 father_name: document.getElementById('fatherName').value,
@@ -1055,10 +1112,7 @@
                         mobile: document.getElementById(`member${i}_mobile`)?.value || ''
                     };
                     
-                    // Check if at least name is provided
-                    if (memberData.name.trim() !== '') {
-                        members.push(memberData);
-                    }
+                    members.push(memberData);
                 }
             }
             
@@ -1081,7 +1135,7 @@
                     })
                 });
                 
-                showAlert('✅ Form submitted successfully! Data saved to Google Sheet.', 'success');
+                showAlert('✅ Form submitted successfully!', 'success');
                 
                 setTimeout(() => {
                     closeModal('newDetailsModal');
@@ -1090,10 +1144,6 @@
                     document.getElementById('newDetailsForm').reset();
                     document.getElementById('membersContainer').innerHTML = '';
                     memberCount = 0;
-                    
-                    // Reset display fields
-                    document.getElementById('displayName').textContent = sessionStorage.getItem('userName');
-                    document.getElementById('displayHouseNo').textContent = sessionStorage.getItem('userHouse');
                 }, 2000);
                 
             } catch (error) {
@@ -1105,6 +1155,7 @@
             }
         });
         
+        // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.classList.contains('modal')) {
                 event.target.style.display = 'none';
@@ -1116,22 +1167,6 @@
         document.getElementById('mobile').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
         });
-        
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                from {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateX(100%);
-                }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
