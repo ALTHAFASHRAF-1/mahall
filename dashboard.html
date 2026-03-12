@@ -236,7 +236,7 @@
             margin: 2rem auto;
             padding: 2rem;
             width: 90%;
-            max-width: 700px;
+            max-width: 900px;
             max-height: 90vh;
             overflow-y: auto;
             border-radius: 30px;
@@ -311,61 +311,101 @@
             padding-right: 2rem;
         }
         
-        .image-container {
+        h3 {
+            color: #4a5568;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        
+        h4 {
+            color: #2d3748;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.1rem;
+            background: #edf2f7;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .pdf-container {
             text-align: center;
             margin: 1.5rem 0;
             padding: 1rem;
             background: #f9f9f9;
             border-radius: 20px;
-            min-height: 300px;
+            min-height: 500px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
         
-        .image-container img {
-            max-width: 100%;
-            max-height: 400px;
+        .pdf-container iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            transition: transform 0.3s;
         }
         
-        .image-container img:hover {
-            transform: scale(1.02);
+        @media (max-width: 768px) {
+            .pdf-container iframe {
+                height: 500px;
+            }
         }
         
-        #noImageMsg {
+        @media (max-width: 480px) {
+            .pdf-container iframe {
+                height: 400px;
+            }
+        }
+        
+        #noPdfMsg {
             color: #888;
             font-size: 1.1rem;
-            padding: 2rem;
+            padding: 3rem;
             background: white;
             border-radius: 15px;
             border: 2px dashed #ddd;
+            text-align: center;
+        }
+        
+        #noPdfMsg span {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
         
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #555;
+            color: #4a5568;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
         
-        .form-group input {
+        .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 1rem;
+            padding: 0.75rem;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
             transition: all 0.3s;
+            background-color: white;
         }
         
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -378,57 +418,38 @@
             color: #666;
         }
         
-        .members-section {
-            margin: 2rem 0;
-            padding: 1.5rem;
+        .member-section {
             background: #f8fafc;
-            border-radius: 20px;
-            border: 2px solid #edf2f7;
-        }
-        
-        .members-section h3 {
-            color: #4a5568;
+            border-radius: 15px;
+            padding: 1.5rem;
             margin-bottom: 1.5rem;
-            font-size: 1.2rem;
+            border: 2px solid #edf2f7;
+            position: relative;
+        }
+        
+        .member-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .member-input {
-            display: flex;
-            gap: 0.75rem;
             margin-bottom: 1rem;
-            animation: slideIn 0.3s ease;
         }
         
-        @media (max-width: 480px) {
-            .member-input {
-                flex-direction: column;
-            }
-        }
-        
-        .member-input input {
-            flex: 1;
-            padding: 0.875rem;
+        .member-header h5 {
+            color: #2d3748;
+            font-size: 1.1rem;
+            font-weight: 600;
         }
         
         .remove-member {
             background: #f56565;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
             cursor: pointer;
             transition: all 0.3s;
             font-weight: 600;
-            white-space: nowrap;
-        }
-        
-        @media (max-width: 480px) {
-            .remove-member {
-                width: 100%;
-            }
+            font-size: 0.9rem;
         }
         
         .remove-member:hover {
@@ -442,13 +463,13 @@
             color: white;
             border: none;
             border-radius: 10px;
-            padding: 0.875rem 1.5rem;
+            padding: 1rem 1.5rem;
             cursor: pointer;
-            margin-top: 1rem;
+            margin: 1rem 0;
             transition: all 0.3s;
             font-weight: 600;
-            width: 100%;
             font-size: 1rem;
+            width: 100%;
         }
         
         .add-member:hover {
@@ -529,13 +550,6 @@
             100% { transform: rotate(360deg); }
         }
         
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
         .info-card {
             background: #f7fafc;
             padding: 1rem;
@@ -555,6 +569,43 @@
             font-size: 1.1rem;
             font-weight: 600;
         }
+        
+        .radio-group {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: normal;
+            color: #4a5568;
+            cursor: pointer;
+        }
+        
+        .radio-group input[type="radio"] {
+            width: auto;
+            margin-right: 0.25rem;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        @keyframes slideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
     </style>
 </head>
 <body>
@@ -571,77 +622,163 @@
         
         <div class="buttons-section">
             <button class="action-btn old-details" onclick="showOldDetails()">
-                <span>📸</span> Old Details
+                <span>📄</span> Old Details (PDF)
             </button>
             <button class="action-btn new-details" onclick="showNewDetails()">
-                <span>📝</span> New Details
+                <span>📝</span> New Details Form
             </button>
         </div>
     </div>
     
-    <!-- Old Details Modal -->
+    <!-- Old Details Modal - PDF Viewer -->
     <div id="oldDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
-            <h2>📸 Old Details - Image</h2>
-            <div class="image-container" id="imageContainer">
-                <img id="userImage" src="" alt="User Image" style="display: none;">
-                <div id="noImageMsg" style="display: none;">
-                    <span style="font-size: 3rem;">🖼️</span>
-                    <p>No image available</p>
+            <h2>📄 Document Viewer</h2>
+            <div class="pdf-container" id="pdfContainer">
+                <iframe id="pdfViewer" src="" frameborder="0" style="display: none;"></iframe>
+                <div id="noPdfMsg" style="display: none;">
+                    <span>📄</span>
+                    <p>No PDF document available</p>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- New Details Modal -->
+    <!-- New Details Modal - Comprehensive Form -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
-            <h2>📝 New Details Form</h2>
+            <h2>📝 Complete Details Form</h2>
             
             <div id="formAlert" class="alert"></div>
             <div id="formLoader" class="loader"></div>
             
             <form id="newDetailsForm">
-                <div class="info-grid">
+                <!-- User Info Cards -->
+                <div class="form-grid">
                     <div class="info-card">
                         <strong>Name</strong>
-                        <p id="name"></p>
+                        <p id="displayName"></p>
                     </div>
                     <div class="info-card">
                         <strong>House No</strong>
-                        <p id="house_no"></p>
+                        <p id="displayHouseNo"></p>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="block">🏢 Block Number</label>
-                    <input type="text" id="block" required placeholder="Enter block number (e.g., A-101)">
-                </div>
-                
-                <div class="form-group">
-                    <label for="father_name">👨 Father's Name</label>
-                    <input type="text" id="father_name" required placeholder="Enter father's full name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="place">📍 Place</label>
-                    <input type="text" id="place" required placeholder="Enter your place/city">
-                </div>
-                
-                <div class="form-group">
-                    <label for="ph">📞 Phone Number</label>
-                    <input type="tel" id="ph" required placeholder="Enter 10-digit mobile number" pattern="[0-9]{10}" maxlength="10" title="Please enter a valid 10-digit phone number">
-                </div>
-                
-                <div class="members-section">
-                    <h3>👥 Additional Family Members</h3>
-                    <div id="membersContainer">
-                        <!-- Members will be added here dynamically -->
+
+                <!-- Main Form Fields -->
+                <h3>🏠 Basic Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="block">Block *</label>
+                        <input type="text" id="block" required placeholder="Enter block (e.g., A)">
                     </div>
-                    <button type="button" class="add-member" onclick="addMember()">➕ Add Family Member</button>
+                    
+                    <div class="form-group">
+                        <label for="grade">Grade *</label>
+                        <input type="text" id="grade" required placeholder="Enter grade">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mobile">Mobile Number *</label>
+                        <input type="tel" id="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="houseHolder">House Holder Name *</label>
+                        <input type="text" id="houseHolder" required placeholder="Enter house holder name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="houseName">House Name *</label>
+                        <input type="text" id="houseName" required placeholder="Enter house name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fatherName">Father's Name *</label>
+                        <input type="text" id="fatherName" required placeholder="Enter father's name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="place">Place *</label>
+                        <input type="text" id="place" required placeholder="Enter place">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="houseType">House Type *</label>
+                        <select id="houseType" required>
+                            <option value="">Select house type</option>
+                            <option value="Own">Own</option>
+                            <option value="Rented">Rented</option>
+                            <option value="Leased">Leased</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="postalAddress">Postal Address *</label>
+                        <textarea id="postalAddress" required placeholder="Enter complete postal address" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rationCard">Ration Card No *</label>
+                        <input type="text" id="rationCard" required placeholder="Enter ration card number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="division">Division *</label>
+                        <input type="text" id="division" required placeholder="Enter division">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ward">Ward *</label>
+                        <input type="text" id="ward" required placeholder="Enter ward">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="buildingNo">Building No *</label>
+                        <input type="text" id="buildingNo" required placeholder="Enter building number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="oldHouseNo">Old House No *</label>
+                        <input type="text" id="oldHouseNo" required placeholder="Enter old house number">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="madrasa">Madrasa *</label>
+                        <input type="text" id="madrasa" required placeholder="Enter madrasa name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="anyGrant">Any Grant? *</label>
+                        <select id="anyGrant" required>
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="donation">Donation *</label>
+                        <input type="text" id="donation" required placeholder="Enter donation amount/details">
+                    </div>
                 </div>
+
+                <!-- Family Members Section -->
+                <h3>👥 Family Members</h3>
+                <div id="membersContainer"></div>
+                <button type="button" class="add-member" onclick="addMember()">➕ Add Family Member</button>
                 
                 <button type="submit" class="submit-btn">✅ Submit to Google Sheet</button>
             </form>
@@ -649,7 +786,8 @@
     </div>
 
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj4gXDFItpHK-r-r6W4CttIl_8xezV8xcN0_ExGkJ6jSzH80RhXpE0TtvAAK4PhAt5Wg/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYAUGReghNUxw9ilwe1wdlwFAz8PpjXR4zOaial6Q1LeiA4jmdHMcVXnp5XnVYl5UARA/exec';
+        let memberCount = 0;
         
         window.onload = function() {
             const userName = sessionStorage.getItem('userName');
@@ -661,11 +799,8 @@
             }
             
             document.getElementById('userInfo').innerHTML = `${userName} | 🏠 House ${userHouse}`;
-            
-            document.getElementById('name').textContent = userName;
-            document.getElementById('house_no').textContent = userHouse;
-            
-            addMember();
+            document.getElementById('displayName').textContent = userName;
+            document.getElementById('displayHouseNo').textContent = userHouse;
         };
         
         function logout() {
@@ -680,17 +815,26 @@
         }
         
         function showOldDetails() {
-            const imageUrl = sessionStorage.getItem('userImage');
-            const imageElement = document.getElementById('userImage');
-            const noImageMsg = document.getElementById('noImageMsg');
+            const pdfUrl = sessionStorage.getItem('userPdfUrl');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const noPdfMsg = document.getElementById('noPdfMsg');
             
-            if (imageUrl && imageUrl.trim() !== '') {
-                imageElement.src = imageUrl;
-                imageElement.style.display = 'block';
-                noImageMsg.style.display = 'none';
+            if (pdfUrl && pdfUrl.trim() !== '') {
+                // Convert to preview URL if it's a Google Drive link
+                let previewUrl = pdfUrl;
+                if (pdfUrl.includes('drive.google.com/file/d/')) {
+                    const fileId = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
+                    if (fileId && fileId[1]) {
+                        previewUrl = `https://drive.google.com/file/d/${fileId[1]}/preview`;
+                    }
+                }
+                
+                pdfViewer.src = previewUrl;
+                pdfViewer.style.display = 'block';
+                noPdfMsg.style.display = 'none';
             } else {
-                imageElement.style.display = 'none';
-                noImageMsg.style.display = 'block';
+                pdfViewer.style.display = 'none';
+                noPdfMsg.style.display = 'block';
             }
             
             document.getElementById('oldDetailsModal').style.display = 'block';
@@ -698,6 +842,8 @@
         }
         
         function showNewDetails() {
+            memberCount = 0;
+            document.getElementById('membersContainer').innerHTML = '';
             document.getElementById('newDetailsModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
         }
@@ -709,27 +855,137 @@
         }
         
         function addMember() {
+            memberCount++;
             const container = document.getElementById('membersContainer');
-            const memberCount = container.children.length + 1;
             
             const memberDiv = document.createElement('div');
-            memberDiv.className = 'member-input';
+            memberDiv.className = 'member-section';
+            memberDiv.id = `member_${memberCount}`;
+            
             memberDiv.innerHTML = `
-                <input type="text" placeholder="Enter member ${memberCount} name" class="member-name">
-                <button type="button" class="remove-member" onclick="removeMember(this)">🗑️ Remove</button>
+                <div class="member-header">
+                    <h5>👤 Member ${memberCount}</h5>
+                    <button type="button" class="remove-member" onclick="removeMember(this)">🗑️ Remove</button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="member${memberCount}_name">Name *</label>
+                        <input type="text" id="member${memberCount}_name" class="member-name" required placeholder="Enter full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_gender">Gender *</label>
+                        <select id="member${memberCount}_gender" class="member-gender" required>
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_relation">Relation to House Holder *</label>
+                        <input type="text" id="member${memberCount}_relation" class="member-relation" required placeholder="e.g., Son, Daughter, Wife">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_dob">Date of Birth *</label>
+                        <input type="date" id="member${memberCount}_dob" class="member-dob" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_age">Age *</label>
+                        <input type="number" id="member${memberCount}_age" class="member-age" required placeholder="Age in years" min="0" max="120">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_fatherName">Father's Name *</label>
+                        <input type="text" id="member${memberCount}_fatherName" class="member-fatherName" required placeholder="Enter father's name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_education">Education *</label>
+                        <input type="text" id="member${memberCount}_education" class="member-education" required placeholder="Enter education qualification">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_job">Job *</label>
+                        <input type="text" id="member${memberCount}_job" class="member-job" required placeholder="Enter occupation">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_health">Health Status *</label>
+                        <select id="member${memberCount}_health" class="member-health" required>
+                            <option value="">Select health status</option>
+                            <option value="Good">Good</option>
+                            <option value="Average">Average</option>
+                            <option value="Poor">Poor</option>
+                            <option value="Chronic illness">Chronic illness</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_marriage">Marriage Status *</label>
+                        <select id="member${memberCount}_marriage" class="member-marriage" required>
+                            <option value="">Select status</option>
+                            <option value="Married">Married</option>
+                            <option value="Unmarried">Unmarried</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_bloodGroup">Blood Group *</label>
+                        <select id="member${memberCount}_bloodGroup" class="member-bloodGroup" required>
+                            <option value="">Select blood group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="member${memberCount}_mobile">Mobile Number</label>
+                        <input type="tel" id="member${memberCount}_mobile" class="member-mobile" placeholder="Enter mobile number" pattern="[0-9]{10}" maxlength="10">
+                    </div>
+                </div>
             `;
             
             container.appendChild(memberDiv);
             
             // Add animation
             memberDiv.style.animation = 'slideIn 0.3s ease';
+            
+            // Auto-calculate age from DOB
+            const dobInput = document.getElementById(`member${memberCount}_dob`);
+            const ageInput = document.getElementById(`member${memberCount}_age`);
+            
+            dobInput.addEventListener('change', function() {
+                if (this.value) {
+                    const birthDate = new Date(this.value);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    ageInput.value = age;
+                }
+            });
         }
         
         function removeMember(button) {
-            const memberDiv = button.parentElement;
+            const memberDiv = button.closest('.member-section');
             memberDiv.style.animation = 'slideOut 0.3s ease';
             setTimeout(() => {
                 memberDiv.remove();
+                memberCount--;
             }, 200);
         }
         
@@ -747,27 +1003,64 @@
         document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const phone = document.getElementById('ph').value;
-            if (!/^\d{10}$/.test(phone)) {
-                showAlert('❌ Please enter a valid 10-digit phone number', 'error');
+            // Validate mobile
+            const mobile = document.getElementById('mobile').value;
+            if (!/^\d{10}$/.test(mobile)) {
+                showAlert('❌ Please enter a valid 10-digit mobile number', 'error');
                 return;
             }
             
+            // Collect main form data
             const formData = {
-                name: document.getElementById('name').textContent,
-                house_no: document.getElementById('house_no').textContent,
+                timestamp: new Date().toISOString(),
+                name: document.getElementById('displayName').textContent,
+                house_no: document.getElementById('displayHouseNo').textContent,
                 block: document.getElementById('block').value,
-                father_name: document.getElementById('father_name').value,
+                grade: document.getElementById('grade').value,
+                mobile: mobile,
+                house_holder: document.getElementById('houseHolder').value,
+                house_name: document.getElementById('houseName').value,
+                father_name: document.getElementById('fatherName').value,
                 place: document.getElementById('place').value,
-                ph: phone
+                house_type: document.getElementById('houseType').value,
+                gender: document.getElementById('gender').value,
+                postal_address: document.getElementById('postalAddress').value,
+                ration_card: document.getElementById('rationCard').value,
+                division: document.getElementById('division').value,
+                ward: document.getElementById('ward').value,
+                building_no: document.getElementById('buildingNo').value,
+                old_house_no: document.getElementById('oldHouseNo').value,
+                madrasa: document.getElementById('madrasa').value,
+                any_grant: document.getElementById('anyGrant').value,
+                donation: document.getElementById('donation').value
             };
             
+            // Collect members data
             const members = [];
-            document.querySelectorAll('.member-name').forEach(input => {
-                if (input.value.trim() !== '') {
-                    members.push(input.value.trim());
+            for (let i = 1; i <= memberCount; i++) {
+                const memberDiv = document.getElementById(`member_${i}`);
+                if (memberDiv) {
+                    const memberData = {
+                        name: document.getElementById(`member${i}_name`)?.value || '',
+                        gender: document.getElementById(`member${i}_gender`)?.value || '',
+                        relation: document.getElementById(`member${i}_relation`)?.value || '',
+                        dob: document.getElementById(`member${i}_dob`)?.value || '',
+                        age: document.getElementById(`member${i}_age`)?.value || '',
+                        father_name: document.getElementById(`member${i}_fatherName`)?.value || '',
+                        education: document.getElementById(`member${i}_education`)?.value || '',
+                        job: document.getElementById(`member${i}_job`)?.value || '',
+                        health: document.getElementById(`member${i}_health`)?.value || '',
+                        marriage: document.getElementById(`member${i}_marriage`)?.value || '',
+                        blood_group: document.getElementById(`member${i}_bloodGroup`)?.value || '',
+                        mobile: document.getElementById(`member${i}_mobile`)?.value || ''
+                    };
+                    
+                    // Check if at least name is provided
+                    if (memberData.name.trim() !== '') {
+                        members.push(memberData);
+                    }
                 }
-            });
+            }
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const loader = document.getElementById('formLoader');
@@ -793,16 +1086,14 @@
                 setTimeout(() => {
                     closeModal('newDetailsModal');
                     
-                    document.getElementById('block').value = '';
-                    document.getElementById('father_name').value = '';
-                    document.getElementById('place').value = '';
-                    document.getElementById('ph').value = '';
-                    
+                    // Reset form
+                    document.getElementById('newDetailsForm').reset();
                     document.getElementById('membersContainer').innerHTML = '';
-                    addMember();
+                    memberCount = 0;
                     
-                    document.getElementById('name').textContent = sessionStorage.getItem('userName');
-                    document.getElementById('house_no').textContent = sessionStorage.getItem('userHouse');
+                    // Reset display fields
+                    document.getElementById('displayName').textContent = sessionStorage.getItem('userName');
+                    document.getElementById('displayHouseNo').textContent = sessionStorage.getItem('userHouse');
                 }, 2000);
                 
             } catch (error) {
@@ -821,11 +1112,12 @@
             }
         };
         
-        document.getElementById('ph').addEventListener('input', function(e) {
+        // Mobile number validation
+        document.getElementById('mobile').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
         });
         
-        // Add CSS animation for remove
+        // Add CSS animation
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideOut {
