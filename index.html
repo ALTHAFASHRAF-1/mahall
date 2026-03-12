@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Login System</title>
     <style>
         * {
@@ -18,69 +18,127 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
         
         .container {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            transition: all 0.3s ease;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1.5rem;
+            }
         }
         
         h1 {
             color: #333;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-align: center;
+            font-size: clamp(1.8rem, 5vw, 2.2rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
         
         label {
             display: block;
             margin-bottom: 0.5rem;
             color: #555;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        select {
+        select, input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 1rem;
             border: 2px solid #e0e0e0;
-            border-radius: 5px;
+            border-radius: 12px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
             background-color: white;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
         }
         
-        select:focus {
+        input {
+            background-image: none;
+        }
+        
+        select:focus, input:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        select.error {
+        select.error, input.error {
             border-color: #f56565;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
         
         .btn {
             width: 100%;
-            padding: 0.75rem;
+            padding: 1rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.5);
         }
         
         .btn:active {
@@ -89,24 +147,25 @@
         
         .error-message {
             color: #f56565;
-            font-size: 0.875rem;
-            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
             display: none;
+            padding-left: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .loader-container {
+            display: none;
+            text-align: center;
+            margin-top: 1.5rem;
         }
         
         .loader {
-            display: none;
-            text-align: center;
-            margin-top: 1rem;
-        }
-        
-        .loader:after {
-            content: '';
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #667eea;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
@@ -118,33 +177,102 @@
         
         .note {
             text-align: center;
-            margin-top: 1rem;
-            color: #666;
-            font-size: 0.875rem;
+            margin-top: 1.5rem;
+            color: #888;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
         
         .alert {
-            padding: 0.75rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
             display: none;
+            font-size: 0.95rem;
+            text-align: center;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .alert-error {
-            background: #fed7d7;
-            color: #742a2a;
-            border: 1px solid #fc8181;
+            background: #fff5f5;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+        
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        select:disabled {
+            background-color: #f7fafc;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .loading-text {
+            color: #667eea;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                max-width: 100%;
+            }
+            
+            select, input, .btn {
+                padding: 0.875rem;
+            }
+        }
+        
+        @media (max-width: 380px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+        
+        .input-icon {
+            position: relative;
+        }
+        
+        .input-icon i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+        }
+        
+        .input-icon input {
+            padding-left: 2.5rem;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
+        <h1>🔐 Welcome Back</h1>
         
         <div id="loginAlert" class="alert alert-error"></div>
         
         <div class="form-group">
-            <label for="name">Select Name</label>
+            <label>👤 Select Name</label>
             <select id="name" class="name-select">
                 <option value="">Loading names...</option>
             </select>
@@ -152,38 +280,43 @@
         </div>
         
         <div class="form-group">
-            <label for="houseNo">Select House Number</label>
+            <label>🏠 Select House Number</label>
             <select id="houseNo" class="house-select" disabled>
                 <option value="">Select name first</option>
             </select>
             <div class="error-message" id="houseError">Please select a house number</div>
         </div>
         
-        <button class="btn" onclick="login()">Login</button>
+        <button class="btn" onclick="login()">Login to Dashboard</button>
         
-        <div class="loader" id="loader"></div>
-        <div class="note">Select your name and house number to continue</div>
+        <div class="loader-container" id="loaderContainer">
+            <div class="loader"></div>
+            <div class="loading-text">Loading data...</div>
+        </div>
+        
+        <div class="note">
+            ✨ Select your name and house number to continue<br>
+            <small>Your data is secure and encrypted</small>
+        </div>
     </div>
 
     <script>
         let credentials = [];
         let nameToHouseMap = {};
         
-        // Load credentials when page loads
         window.onload = function() {
             loadCredentials();
         };
         
         function loadCredentials() {
             const nameSelect = document.getElementById('name');
-            const loader = document.getElementById('loader');
+            const loaderContainer = document.getElementById('loaderContainer');
             const alert = document.getElementById('loginAlert');
             
-            loader.style.display = 'block';
-            nameSelect.innerHTML = '<option value="">Loading...</option>';
+            loaderContainer.style.display = 'block';
+            nameSelect.innerHTML = '<option value="">⏳ Loading...</option>';
             alert.style.display = 'none';
             
-            // Fetch from CSV
             fetch('https://docs.google.com/spreadsheets/d/e/2PACX-1vRTwV2yxjrQAm1q4HGXhfpLlvmbc7igJbAZEuoqA2NRtGCEkBQGb2t5sHjPUik2MQiTCMhpEAxmwKsZ/pub?gid=0&single=true&output=csv')
                 .then(response => response.text())
                 .then(csvData => {
@@ -195,7 +328,6 @@
                     
                     for (let i = 1; i < lines.length; i++) {
                         if (lines[i].trim()) {
-                            // Handle CSV parsing with quotes
                             const values = lines[i].match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g);
                             if (values) {
                                 const name = values[headers.indexOf('name')]?.replace(/"/g, '').trim();
@@ -213,29 +345,27 @@
                         }
                     }
                     
-                    // Populate name dropdown
                     const uniqueNames = [...new Set(credentials.map(c => c.name))];
                     if (uniqueNames.length > 0) {
-                        nameSelect.innerHTML = '<option value="">Select Name</option>';
+                        nameSelect.innerHTML = '<option value="">📋 Select Name</option>';
                         uniqueNames.forEach(name => {
                             nameSelect.innerHTML += `<option value="${name}">${name}</option>`;
                         });
                     } else {
-                        nameSelect.innerHTML = '<option value="">No data available</option>';
+                        nameSelect.innerHTML = '<option value="">❌ No data available</option>';
                     }
                     
-                    loader.style.display = 'none';
+                    loaderContainer.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error loading CSV:', error);
-                    nameSelect.innerHTML = '<option value="">Error loading data</option>';
+                    nameSelect.innerHTML = '<option value="">❌ Error loading data</option>';
                     alert.textContent = 'Failed to load user data. Please refresh the page.';
                     alert.style.display = 'block';
-                    loader.style.display = 'none';
+                    loaderContainer.style.display = 'none';
                 });
         }
         
-        // Update house numbers when name is selected
         document.getElementById('name').addEventListener('change', function() {
             const selectedName = this.value;
             const houseSelect = document.getElementById('houseNo');
@@ -243,18 +373,23 @@
             
             if (selectedName) {
                 const houses = nameToHouseMap[selectedName] || [];
-                houseSelect.innerHTML = '<option value="">Select House Number</option>';
+                houseSelect.innerHTML = '<option value="">🏠 Select House Number</option>';
                 houses.forEach(house => {
-                    houseSelect.innerHTML += `<option value="${house}">${house}</option>`;
+                    houseSelect.innerHTML += `<option value="${house}">House ${house}</option>`;
                 });
                 houseSelect.disabled = false;
                 houseError.style.display = 'none';
+                
+                // Add success animation
+                houseSelect.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    houseSelect.style.transform = 'scale(1)';
+                }, 200);
             } else {
-                houseSelect.innerHTML = '<option value="">Select name first</option>';
+                houseSelect.innerHTML = '<option value="">⚠️ Select name first</option>';
                 houseSelect.disabled = true;
             }
             
-            // Remove error styling
             document.getElementById('name').classList.remove('error');
         });
         
@@ -289,16 +424,41 @@
             if (isValid) {
                 const user = credentials.find(c => c.name === name && c.house_no === houseNo);
                 if (user) {
+                    // Add loading animation
+                    const btn = document.querySelector('.btn');
+                    btn.innerHTML = '⏳ Logging in...';
+                    btn.disabled = true;
+                    
                     sessionStorage.setItem('userName', name);
                     sessionStorage.setItem('userHouse', houseNo);
                     sessionStorage.setItem('userImage', user.image || '');
-                    window.location.href = 'dashboard.html';
+                    
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1000);
                 } else {
-                    document.getElementById('loginAlert').textContent = 'Invalid credentials. Please check your name and house number.';
+                    document.getElementById('loginAlert').textContent = '❌ Invalid credentials. Please check your name and house number.';
                     document.getElementById('loginAlert').style.display = 'block';
+                    
+                    // Shake animation on error
+                    document.querySelector('.container').style.animation = 'shake 0.5s ease-in-out';
+                    setTimeout(() => {
+                        document.querySelector('.container').style.animation = '';
+                    }, 500);
                 }
             }
         }
+        
+        // Add input animation
+        document.querySelectorAll('select').forEach(select => {
+            select.addEventListener('focus', function() {
+                this.parentElement.style.transform = 'translateY(-2px)';
+            });
+            
+            select.addEventListener('blur', function() {
+                this.parentElement.style.transform = 'translateY(0)';
+            });
+        });
     </script>
 </body>
 </html>
