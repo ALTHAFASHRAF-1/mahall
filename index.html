@@ -247,22 +247,6 @@
                 font-size: 1.5rem;
             }
         }
-        
-        .input-icon {
-            position: relative;
-        }
-        
-        .input-icon i {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #a0aec0;
-        }
-        
-        .input-icon input {
-            padding-left: 2.5rem;
-        }
     </style>
 </head>
 <body>
@@ -332,10 +316,10 @@
                             if (values) {
                                 const name = values[headers.indexOf('name')]?.replace(/"/g, '').trim();
                                 const houseNo = values[headers.indexOf('house_no')]?.replace(/"/g, '').trim();
-                                const image = values[headers.indexOf('image')]?.replace(/"/g, '').trim();
+                                const pdfUrl = values[headers.indexOf('pdf_url')]?.replace(/"/g, '').trim();
                                 
                                 if (name && houseNo) {
-                                    credentials.push({ name, house_no: houseNo, image });
+                                    credentials.push({ name, house_no: houseNo, pdf_url: pdfUrl });
                                     if (!nameToHouseMap[name]) {
                                         nameToHouseMap[name] = [];
                                     }
@@ -431,7 +415,7 @@
                     
                     sessionStorage.setItem('userName', name);
                     sessionStorage.setItem('userHouse', houseNo);
-                    sessionStorage.setItem('userImage', user.image || '');
+                    sessionStorage.setItem('userPdfUrl', user.pdf_url || '');
                     
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
