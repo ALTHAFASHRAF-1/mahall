@@ -197,13 +197,15 @@
             margin-bottom: 1rem;
         }
         
-        /* Scrollable Form Modal */
+        /* Scrollable Form Modal - FIXED VERSION */
         #newDetailsModal .modal-content,
         #submittedDetailsModal .modal-content {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: white;
-            width: 100%;
-            min-height: 100%;
             padding: 1.2rem;
             overflow-y: auto;
             -webkit-overflow-scrolling: touch;
@@ -511,7 +513,7 @@
         </div>
     </div>
     
-    <!-- Scrollable Form Modal -->
+    <!-- Scrollable Form Modal - FIXED -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('newDetailsModal')">×</button>
@@ -641,7 +643,9 @@
                 <div id="membersContainer"></div>
                 <button type="button" class="add-member" onclick="addMember()">➕ Add Member</button>
                 
+                <!-- Submit button with extra bottom margin for scrolling -->
                 <button type="submit" class="submit-btn">✅ Submit</button>
+                <div style="height: 20px;"></div> <!-- Extra space at bottom -->
             </form>
         </div>
     </div>
@@ -734,11 +738,16 @@
             document.getElementById('oldDetailsModal').style.display = 'block';
         }
         
-        // Scrollable Form
+        // Scrollable Form - FIXED
         function showNewDetails() {
             memberCount = 0;
             document.getElementById('membersContainer').innerHTML = '';
             document.getElementById('newDetailsModal').style.display = 'block';
+            // Ensure modal content scrolls to top
+            const modalContent = document.querySelector('#newDetailsModal .modal-content');
+            if (modalContent) {
+                modalContent.scrollTop = 0;
+            }
         }
         
         // Submitted Details
