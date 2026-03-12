@@ -160,6 +160,11 @@
             border-color: #667eea;
         }
         
+        .form-group input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
         .members-section {
             margin: 1rem 0;
             padding: 1rem;
@@ -184,6 +189,11 @@
             border-radius: 5px;
             padding: 0.5rem 1rem;
             cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .remove-member:hover {
+            background: #c53030;
         }
         
         .add-member {
@@ -194,6 +204,11 @@
             padding: 0.5rem 1rem;
             cursor: pointer;
             margin-top: 0.5rem;
+            transition: background 0.3s;
+        }
+        
+        .add-member:hover {
+            background: #5a67d8;
         }
         
         .submit-btn {
@@ -207,10 +222,57 @@
             font-weight: 600;
             cursor: pointer;
             margin-top: 1rem;
+            transition: background 0.3s;
         }
         
         .submit-btn:hover {
             background: #38a169;
+        }
+        
+        .submit-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .alert-error {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .loader:after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
         
         @media (max-width: 768px) {
@@ -256,6 +318,9 @@
             <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
             <h2>New Details Form</h2>
             
+            <div id="formAlert" class="alert"></div>
+            <div id="formLoader" class="loader"></div>
+            
             <form id="newDetailsForm">
                 <div class="form-group">
                     <label for="name">Name</label>
@@ -269,41 +334,41 @@
                 
                 <div class="form-group">
                     <label for="block">Block</label>
-                    <input type="text" id="block" required>
+                    <input type="text" id="block" required placeholder="Enter block number">
                 </div>
                 
                 <div class="form-group">
                     <label for="father_name">Father Name</label>
-                    <input type="text" id="father_name" required>
+                    <input type="text" id="father_name" required placeholder="Enter father's name">
                 </div>
                 
                 <div class="form-group">
                     <label for="place">Place</label>
-                    <input type="text" id="place" required>
+                    <input type="text" id="place" required placeholder="Enter place">
                 </div>
                 
                 <div class="form-group">
                     <label for="ph">Phone</label>
-                    <input type="tel" id="ph" required>
+                    <input type="tel" id="ph" required placeholder="Enter phone number" pattern="[0-9]{10}" title="Please enter a valid 10-digit phone number">
                 </div>
                 
                 <div class="members-section">
                     <h3>Additional Members</h3>
                     <div id="membersContainer">
-                        <div class="member-input">
-                            <input type="text" placeholder="Member 1 Name" class="member-name">
-                            <button type="button" class="remove-member" onclick="removeMember(this)" style="display: none;">Remove</button>
-                        </div>
+                        <!-- Members will be added here dynamically -->
                     </div>
                     <button type="button" class="add-member" onclick="addMember()">+ Add Member</button>
                 </div>
                 
-                <button type="submit" class="submit-btn">Submit</button>
+                <button type="submit" class="submit-btn">Submit to Google Sheet</button>
             </form>
         </div>
     </div>
 
     <script>
+        // Configuration - Replace with your Google Apps Script Web App URL
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj4gXDFItpHK-r-r6W4CttIl_8xezV8xcN0_ExGkJ6jSzH80RhXpE0TtvAAK4PhAt5Wg/exec'; // Get this from Deploy > Web App
+        
         // Check if user is logged in
         window.onload = function() {
             const userName = sessionStorage.getItem('userName');
@@ -319,6 +384,9 @@
             // Set form values
             document.getElementById('name').value = userName;
             document.getElementById('house_no').value = userHouse;
+            
+            // Add first member field
+            addMember();
         };
         
         function logout() {
@@ -349,6 +417,8 @@
         
         function closeModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
+            // Hide alerts when closing modal
+            document.getElementById('formAlert').style.display = 'none';
         }
         
         function addMember() {
@@ -370,8 +440,27 @@
             memberDiv.remove();
         }
         
-        document.getElementById('newDetailsForm').addEventListener('submit', function(e) {
+        function showAlert(message, type) {
+            const alert = document.getElementById('formAlert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            
+            // Validate phone number
+            const phone = document.getElementById('ph').value;
+            if (!/^\d{10}$/.test(phone)) {
+                showAlert('Please enter a valid 10-digit phone number', 'error');
+                return;
+            }
             
             // Collect form data
             const formData = {
@@ -380,10 +469,10 @@
                 block: document.getElementById('block').value,
                 father_name: document.getElementById('father_name').value,
                 place: document.getElementById('place').value,
-                ph: document.getElementById('ph').value
+                ph: phone
             };
             
-            // Collect additional members
+            // Collect additional members (filter out empty values)
             const members = [];
             document.querySelectorAll('.member-name').forEach(input => {
                 if (input.value.trim() !== '') {
@@ -391,23 +480,58 @@
                 }
             });
             
-            // Submit data (you'll need to implement this with Google Apps Script)
-            // For now, just show success message
-            alert('Form submitted successfully!\n\nData:\n' + JSON.stringify(formData, null, 2) + '\nMembers: ' + members.join(', '));
-            closeModal('newDetailsModal');
+            // Disable submit button and show loader
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const loader = document.getElementById('formLoader');
+            submitBtn.disabled = true;
+            loader.style.display = 'block';
             
-            // Reset form
-            this.reset();
-            document.getElementById('membersContainer').innerHTML = `
-                <div class="member-input">
-                    <input type="text" placeholder="Member 1 Name" class="member-name">
-                    <button type="button" class="remove-member" onclick="removeMember(this)" style="display: none;">Remove</button>
-                </div>
-            `;
-            
-            // Restore readonly fields
-            document.getElementById('name').value = sessionStorage.getItem('userName');
-            document.getElementById('house_no').value = sessionStorage.getItem('userHouse');
+            try {
+                // Send data to Google Apps Script
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // This is important for Google Apps Script
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'submitDetails',
+                        formData: formData,
+                        members: members
+                    })
+                });
+                
+                // Since we're using no-cors, we can't read the response
+                // We'll assume it worked and show success message
+                showAlert('Form submitted successfully! Data saved to Google Sheet.', 'success');
+                
+                // Reset form but keep readonly fields
+                setTimeout(() => {
+                    closeModal('newDetailsModal');
+                    
+                    // Reset form fields
+                    document.getElementById('block').value = '';
+                    document.getElementById('father_name').value = '';
+                    document.getElementById('place').value = '';
+                    document.getElementById('ph').value = '';
+                    
+                    // Reset members container
+                    document.getElementById('membersContainer').innerHTML = '';
+                    addMember(); // Add one empty member field
+                    
+                    // Restore readonly fields
+                    document.getElementById('name').value = sessionStorage.getItem('userName');
+                    document.getElementById('house_no').value = sessionStorage.getItem('userHouse');
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Error submitting form. Please try again.', 'error');
+            } finally {
+                // Re-enable submit button and hide loader
+                submitBtn.disabled = false;
+                loader.style.display = 'none';
+            }
         });
         
         // Close modal when clicking outside
@@ -416,6 +540,11 @@
                 event.target.style.display = 'none';
             }
         };
+        
+        // Phone number validation
+        document.getElementById('ph').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
     </script>
 </body>
 </html>
