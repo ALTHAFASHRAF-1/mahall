@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Dashboard · mobile ready</title>
     <style>
         * {
             margin: 0;
@@ -222,7 +222,7 @@
             backdrop-filter: blur(5px);
             animation: fadeIn 0.3s ease;
             overflow-y: auto;
-            padding: 1rem;
+            padding: 0;               /* removed outer padding for full mobile width */
         }
         
         @keyframes fadeIn {
@@ -230,71 +230,106 @@
             to { opacity: 1; }
         }
         
+        /* ----- MODAL CONTENT –– full width on mobile, with inner scroll & zoom ----- */
         .modal-content {
             position: relative;
             background: white;
-            margin: 2rem auto;
-            padding: 2rem;
-            width: 90%;
+            margin: 0 auto;            /* no top margin on mobile */
+            padding: 1.5rem 1.2rem;
+            width: 100%;
             max-width: 900px;
-            max-height: 90vh;
-            overflow-y: auto;
-            border-radius: 30px;
+            min-height: 100vh;          /* forces full screen height on mobile */
+            border-radius: 0;            /* flat edges for true fullscreen feel */
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
             animation: slideUp 0.4s ease;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @media (max-width: 768px) {
+        /* larger screens: bring back nice modal shape */
+        @media (min-width: 768px) {
             .modal-content {
-                margin: 1rem auto;
-                padding: 1.5rem;
-                width: 95%;
+                margin: 2rem auto;
+                width: 90%;
+                min-height: 0;
+                border-radius: 30px;
+                max-height: 90vh;
             }
         }
         
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 1.25rem;
+        /* PDF container full width, scrollable, pinch-to-zoom friendly */
+        .pdf-container {
+            text-align: center;
+            margin: 1rem 0 0;
+            padding: 0;
+            background: #f1f3f6;
+            border-radius: 12px;
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .pdf-container iframe {
+            width: 100%;
+            height: 80vh;               /* almost full viewport height on mobile */
+            border: none;
+            background: white;
+            display: block;
+        }
+        
+        @media (min-width: 768px) {
+            .pdf-container iframe {
+                height: 600px;
             }
+        }
+        
+        #noPdfMsg {
+            color: #888;
+            font-size: 1.1rem;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 15px;
+            border: 2px dashed #ddd;
+            text-align: center;
+            width: 100%;
+        }
+        
+        #noPdfMsg span {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
         }
         
         .close-btn {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            font-size: 1.8rem;
+            position: sticky;           /* stays visible while scrolling long form */
+            top: 0.5rem;
+            right: 0.5rem;
+            float: right;
+            font-size: 2rem;
             cursor: pointer;
-            color: #999;
-            transition: all 0.3s;
-            background: none;
+            color: #555;
+            background: #f0f0f0;
             border: none;
-            width: 40px;
-            height: 40px;
+            width: 44px;                /* bigger tap target */
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            background: #f0f0f0;
+            z-index: 20;
+            margin-bottom: -44px;        /* offset so content doesn't hide under */
         }
         
-        @media (max-width: 480px) {
+        @media (min-width: 768px) {
             .close-btn {
-                top: 1rem;
-                right: 1rem;
-                width: 35px;
-                height: 35px;
-                font-size: 1.5rem;
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                margin-bottom: 0;
             }
         }
         
@@ -306,103 +341,54 @@
         
         h2 {
             color: #333;
-            margin-bottom: 2rem;
-            font-size: clamp(1.3rem, 5vw, 1.8rem);
-            padding-right: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: clamp(1.3rem, 6vw, 1.8rem);
+            padding-right: 2.5rem;
+            word-break: break-word;
         }
         
         h3 {
             color: #4a5568;
-            margin: 1.5rem 0 1rem 0;
+            margin: 1.8rem 0 1rem 0;
             font-size: 1.3rem;
             border-bottom: 2px solid #e2e8f0;
             padding-bottom: 0.5rem;
         }
         
-        h4 {
-            color: #2d3748;
-            margin: 1.5rem 0 1rem 0;
-            font-size: 1.1rem;
-            background: #edf2f7;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-        }
-        
-        .pdf-container {
-            text-align: center;
-            margin: 1.5rem 0;
-            padding: 1rem;
-            background: #f9f9f9;
-            border-radius: 20px;
-            min-height: 500px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .pdf-container iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-        
-        @media (max-width: 768px) {
-            .pdf-container iframe {
-                height: 500px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .pdf-container iframe {
-                height: 400px;
-            }
-        }
-        
-        #noPdfMsg {
-            color: #888;
-            font-size: 1.1rem;
-            padding: 3rem;
-            background: white;
-            border-radius: 15px;
-            border: 2px dashed #ddd;
-            text-align: center;
-        }
-        
-        #noPdfMsg span {
-            font-size: 3rem;
-            display: block;
-            margin-bottom: 1rem;
-        }
-        
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: 1fr;    /* stacked on mobile */
+            gap: 1rem;
             margin-bottom: 1.5rem;
         }
         
+        @media (min-width: 500px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #4a5568;
+            margin-bottom: 0.3rem;
+            color: #2d3748;
             font-weight: 600;
             font-size: 0.9rem;
         }
         
         .form-group input, .form-group select, .form-group textarea {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.9rem;              /* bigger touch area */
             border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 0.95rem;
-            transition: all 0.3s;
+            border-radius: 14px;
+            font-size: 1rem;
             background-color: white;
+            -webkit-appearance: none;
+            appearance: none;
         }
         
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
@@ -411,200 +397,88 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        .form-group input[readonly] {
-            background-color: #f7fafc;
-            cursor: not-allowed;
-            border-color: #ddd;
-            color: #666;
+        /* info cards stack nicely */
+        .info-card {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
         }
         
         .member-section {
             background: #f8fafc;
-            border-radius: 15px;
-            padding: 1.5rem;
+            border-radius: 20px;
+            padding: 1.2rem;
             margin-bottom: 1.5rem;
             border: 2px solid #edf2f7;
-            position: relative;
         }
         
         .member-header {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1rem;
-        }
-        
-        .member-header h5 {
-            color: #2d3748;
-            font-size: 1.1rem;
-            font-weight: 600;
+            gap: 0.5rem;
         }
         
         .remove-member {
             background: #f56565;
             color: white;
             border: none;
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            transition: all 0.3s;
+            border-radius: 40px;
+            padding: 0.7rem 1.5rem;
             font-weight: 600;
-            font-size: 0.9rem;
-        }
-        
-        .remove-member:hover {
-            background: #c53030;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(197, 48, 48, 0.3);
+            font-size: 1rem;
         }
         
         .add-member {
             background: #667eea;
             color: white;
             border: none;
-            border-radius: 10px;
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            margin: 1rem 0;
-            transition: all 0.3s;
+            border-radius: 40px;
+            padding: 1.2rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            font-size: 1rem;
             width: 100%;
-        }
-        
-        .add-member:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            margin: 0.5rem 0;
         }
         
         .submit-btn {
             width: 100%;
-            padding: 1.2rem;
+            padding: 1.4rem;
             background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
             color: white;
             border: none;
-            border-radius: 50px;
-            font-size: 1.2rem;
+            border-radius: 60px;
+            font-size: 1.3rem;
             font-weight: 700;
-            cursor: pointer;
-            margin-top: 2rem;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .submit-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(72, 187, 120, 0.4);
-        }
-        
-        .submit-btn:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+            margin: 2rem 0 1rem;
         }
         
         .alert {
-            padding: 1rem;
-            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
             margin-bottom: 1.5rem;
-            display: none;
             font-weight: 500;
-            text-align: center;
-            animation: slideIn 0.3s ease;
-        }
-        
-        .alert-success {
-            background: #f0fff4;
-            color: #22543d;
-            border: 2px solid #9ae6b4;
-        }
-        
-        .alert-error {
-            background: #fff5f5;
-            color: #742a2a;
-            border: 2px solid #fc8181;
-        }
-        
-        .loader {
-            display: none;
-            text-align: center;
-            margin: 2rem 0;
+            font-size: 1rem;
         }
         
         .loader:after {
             content: '';
             display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            width: 48px;
+            height: 48px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #667eea;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .info-card {
-            background: #f7fafc;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .info-card strong {
-            color: #4a5568;
-            display: block;
-            margin-bottom: 0.25rem;
-            font-size: 0.9rem;
-        }
-        
-        .info-card p {
-            color: #2d3748;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: normal;
-            color: #4a5568;
-            cursor: pointer;
-        }
-        
-        .radio-group input[type="radio"] {
-            width: auto;
-            margin-right: 0.25rem;
-        }
-        
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
+        /* slideOut animation kept */
         @keyframes slideOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateX(100%);
-            }
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(100%); }
         }
     </style>
 </head>
@@ -630,11 +504,11 @@
         </div>
     </div>
     
-    <!-- Old Details Modal - PDF Viewer -->
+    <!-- Old Details Modal - PDF Viewer (full width mobile) -->
     <div id="oldDetailsModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content" style="padding: 1rem 0.5rem 1rem 0.5rem;"> <!-- less horizontal padding on mobile -->
             <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
-            <h2>📄 Document Viewer</h2>
+            <h2 style="padding-left: 0.8rem;">📄 Document Viewer</h2>
             <div class="pdf-container" id="pdfContainer">
                 <iframe id="pdfViewer" src="" frameborder="0" style="display: none;"></iframe>
                 <div id="noPdfMsg" style="display: none;">
@@ -645,7 +519,7 @@
         </div>
     </div>
     
-    <!-- New Details Modal - Comprehensive Form -->
+    <!-- New Details Modal - Form full width, scrollable -->
     <div id="newDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
@@ -682,7 +556,7 @@
                     
                     <div class="form-group">
                         <label for="mobile">Mobile Number *</label>
-                        <input type="tel" id="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10">
+                        <input type="tel" id="mobile" required placeholder="10-digit mobile" pattern="[0-9]{10}" maxlength="10" inputmode="numeric">
                     </div>
                     
                     <div class="form-group">
@@ -820,7 +694,6 @@
             const noPdfMsg = document.getElementById('noPdfMsg');
             
             if (pdfUrl && pdfUrl.trim() !== '') {
-                // Convert to preview URL if it's a Google Drive link
                 let previewUrl = pdfUrl;
                 if (pdfUrl.includes('drive.google.com/file/d/')) {
                     const fileId = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
@@ -952,17 +825,13 @@
                     
                     <div class="form-group">
                         <label for="member${memberCount}_mobile">Mobile Number</label>
-                        <input type="tel" id="member${memberCount}_mobile" class="member-mobile" placeholder="Enter mobile number" pattern="[0-9]{10}" maxlength="10">
+                        <input type="tel" id="member${memberCount}_mobile" class="member-mobile" placeholder="Enter mobile number" pattern="[0-9]{10}" maxlength="10" inputmode="numeric">
                     </div>
                 </div>
             `;
             
             container.appendChild(memberDiv);
             
-            // Add animation
-            memberDiv.style.animation = 'slideIn 0.3s ease';
-            
-            // Auto-calculate age from DOB
             const dobInput = document.getElementById(`member${memberCount}_dob`);
             const ageInput = document.getElementById(`member${memberCount}_age`);
             
@@ -1003,14 +872,12 @@
         document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            // Validate mobile
             const mobile = document.getElementById('mobile').value;
             if (!/^\d{10}$/.test(mobile)) {
                 showAlert('❌ Please enter a valid 10-digit mobile number', 'error');
                 return;
             }
             
-            // Collect main form data
             const formData = {
                 timestamp: new Date().toISOString(),
                 name: document.getElementById('displayName').textContent,
@@ -1035,7 +902,6 @@
                 donation: document.getElementById('donation').value
             };
             
-            // Collect members data
             const members = [];
             for (let i = 1; i <= memberCount; i++) {
                 const memberDiv = document.getElementById(`member_${i}`);
@@ -1055,7 +921,6 @@
                         mobile: document.getElementById(`member${i}_mobile`)?.value || ''
                     };
                     
-                    // Check if at least name is provided
                     if (memberData.name.trim() !== '') {
                         members.push(memberData);
                     }
@@ -1071,9 +936,7 @@
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'submitDetails',
                         formData: formData,
@@ -1085,13 +948,9 @@
                 
                 setTimeout(() => {
                     closeModal('newDetailsModal');
-                    
-                    // Reset form
                     document.getElementById('newDetailsForm').reset();
                     document.getElementById('membersContainer').innerHTML = '';
                     memberCount = 0;
-                    
-                    // Reset display fields
                     document.getElementById('displayName').textContent = sessionStorage.getItem('userName');
                     document.getElementById('displayHouseNo').textContent = sessionStorage.getItem('userHouse');
                 }, 2000);
@@ -1112,26 +971,9 @@
             }
         };
         
-        // Mobile number validation
         document.getElementById('mobile').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
         });
-        
-        // Add CSS animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideOut {
-                from {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-                to {
-                    opacity: 0;
-                    transform: translateX(100%);
-                }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
