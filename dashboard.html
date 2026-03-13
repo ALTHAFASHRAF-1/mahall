@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>Dashboard · with PDF converter</title>
+    <title>Dashboard · Dynamic PDF to Table</title>
     <style>
         * {
             margin: 0;
@@ -232,7 +232,7 @@
             margin: 0 auto;
             padding: 1.5rem 1.2rem;
             width: 100%;
-            max-width: 1000px;
+            max-width: 1200px;
             min-height: 100vh;
             border-radius: 0;
             box-shadow: 0 25px 50px rgba(0,0,0,0.3);
@@ -286,7 +286,7 @@
             background: #fee;
         }
         
-        /* PDF Toolbar - NEW but doesn't affect forms */
+        /* PDF Toolbar & Table Styles */
         .pdf-toolbar {
             display: flex;
             align-items: center;
@@ -324,9 +324,73 @@
             transform: translateY(-2px);
         }
         
-        /* PDF Table Styles - NEW but isolated */
-        .pdf-data-container {
-            margin-top: 1.5rem;
+        .download-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .download-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .pdf-container {
+            text-align: center;
+            margin: 1rem 0 0;
+            padding: 0;
+            background: #f1f3f6;
+            border-radius: 12px;
+            min-height: 70vh;
+            width: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .pdf-container iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            background: white;
+            display: block;
+        }
+        
+        .pdf-loader {
+            display: none;
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .pdf-loader::after {
+            content: '';
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #e2e8f0;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .error-message {
+            background: #fff5f5;
+            color: #c53030;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid #fc8181;
+            margin: 1rem 0;
         }
         
         .summary-grid {
@@ -425,24 +489,7 @@
             font-size: 0.9rem;
         }
         
-        .pdf-loader {
-            display: none;
-            text-align: center;
-            padding: 3rem;
-        }
-        
-        .pdf-loader::after {
-            content: '';
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #e2e8f0;
-            border-top-color: #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        /* Original Form Styles - COMPLETELY PRESERVED */
+        /* Original Form Styles - PRESERVED */
         h3 {
             color: #4a5568;
             margin: 1.8rem 0 1rem 0;
@@ -566,7 +613,6 @@
             border: 2px solid #fc8181;
         }
         
-        /* Original Load Sheet Selector Styles - PRESERVED */
         .selector-panel {
             background: #f7fafc;
             border-radius: 20px;
@@ -638,51 +684,6 @@
         }
         
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        .download-btn {
-            background: #48bb78;
-            color: white;
-            border: none;
-            border-radius: 40px;
-            padding: 0.8rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        
-        .download-btn:hover {
-            background: #38a169;
-            transform: translateY(-2px);
-        }
-        
-        .download-btn:disabled {
-            background: #cbd5e0;
-            cursor: not-allowed;
-        }
-        
-        .pdf-container {
-            text-align: center;
-            margin: 1rem 0 0;
-            padding: 0;
-            background: #f1f3f6;
-            border-radius: 12px;
-            min-height: 70vh;
-            width: 100%;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .pdf-container iframe {
-            width: 100%;
-            height: 80vh;
-            border: none;
-            background: white;
-            display: block;
-        }
     </style>
 </head>
 <body>
@@ -710,7 +711,7 @@
         </div>
     </div>
     
-    <!-- Old Details Modal - PDF to HTML Converter (NEW FEATURE ONLY) -->
+    <!-- Old Details Modal - Dynamic PDF to HTML Converter -->
     <div id="oldDetailsModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
@@ -721,7 +722,7 @@
                     <button class="toggle-btn active" onclick="toggleView('tables')" id="toggleTablesBtn">📊 Table View</button>
                     <button class="toggle-btn" onclick="toggleView('pdf')" id="togglePdfBtn">📄 Original PDF</button>
                 </div>
-                <button class="download-btn" id="downloadPdfBtn" onclick="downloadPdf()">⬇️ Download PDF</button>
+                <button class="download-btn" id="downloadPdfBtn" onclick="downloadPdf()" disabled>⬇️ Download PDF</button>
             </div>
             
             <!-- PDF Loader -->
@@ -734,11 +735,11 @@
                 </div>
             </div>
             
-            <!-- HTML Table View -->
+            <!-- HTML Table View (Dynamically Generated) -->
             <div id="tableViewContainer">
-                <div id="noPdfMsg" style="display:none;" class="info-message">
+                <div id="noPdfMsg" style="display:none;" class="error-message">
                     <span style="font-size:3rem;">📄</span>
-                    <p>No family register available</p>
+                    <p>No family register available for this user</p>
                 </div>
                 
                 <div id="pdfDataContent" class="pdf-data-container"></div>
@@ -746,7 +747,7 @@
         </div>
     </div>
     
-    <!-- Load From Sheet Modal - ORIGINAL DESIGN PRESERVED -->
+    <!-- Load From Sheet Modal - ORIGINAL DESIGN -->
     <div id="loadSheetModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('loadSheetModal')">&times;</button>
@@ -861,17 +862,19 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwYAUGReghNUxw9ilwe1wdlwFAz8PpjXR4zOaial6Q1LeiA4jmdHMcVXnp5XnVYl5UARA/exec';
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhRyq2Nx7TN5pEdywaOSb4VfS6bH-8MCbCVQ1Dwy0KHH6ryHMPAMEpLGtEQesgj-3OPw/exec';
         const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTwV2yxjrQAm1q4HGXhfpLlvmbc7igJbAZEuoqA2NRtGCEkBQGb2t5sHjPUik2MQiTCMhpEAxmwKsZ/pub?gid=1513156590&single=true&output=csv';
         
         let memberCount = 0;
         let currentPdfUrl = '';
+        let currentPdfData = null;
         let sheetData = [];
         let currentView = 'tables';
         
         window.onload = function() {
             const userName = sessionStorage.getItem('userName');
             const userHouse = sessionStorage.getItem('userHouse');
+            const userPdfUrl = sessionStorage.getItem('userPdfUrl');
             
             if (!userName || !userHouse) {
                 window.location.href = 'index.html';
@@ -881,6 +884,11 @@
             document.getElementById('userInfo').innerHTML = `${userName} | 🏠 House ${userHouse}`;
             document.getElementById('displayName').textContent = userName;
             document.getElementById('displayHouseNo').textContent = userHouse;
+            
+            // Store PDF URL from login
+            if (userPdfUrl) {
+                currentPdfUrl = userPdfUrl;
+            }
         };
         
         function logout() {
@@ -888,11 +896,8 @@
             window.location.href = 'index.html';
         }
         
-        // ========== PDF to HTML Converter (NEW FEATURE ONLY) ==========
+        // ========== Dynamic PDF to HTML Converter ==========
         function showOldDetails() {
-            const pdfUrl = sessionStorage.getItem('userPdfUrl');
-            currentPdfUrl = pdfUrl || '';
-            
             // Reset view
             document.getElementById('tableViewContainer').style.display = 'block';
             document.getElementById('pdfViewerContainer').style.display = 'none';
@@ -900,11 +905,11 @@
             document.getElementById('togglePdfBtn').classList.remove('active');
             currentView = 'tables';
             
-            if (pdfUrl && pdfUrl.trim() !== '') {
+            if (currentPdfUrl && currentPdfUrl.trim() !== '') {
                 // Set up PDF viewer
-                let previewUrl = pdfUrl;
-                if (pdfUrl.includes('drive.google.com/file/d/')) {
-                    const fileId = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
+                let previewUrl = currentPdfUrl;
+                if (currentPdfUrl.includes('drive.google.com/file/d/')) {
+                    const fileId = currentPdfUrl.match(/\/d\/(.+?)(\/|$)/);
                     if (fileId && fileId[1]) {
                         previewUrl = `https://drive.google.com/file/d/${fileId[1]}/preview`;
                     }
@@ -912,8 +917,8 @@
                 document.getElementById('pdfViewer').src = previewUrl;
                 document.getElementById('downloadPdfBtn').disabled = false;
                 
-                // Convert PDF to HTML tables
-                convertPdfToHtml(pdfUrl);
+                // Fetch and parse PDF data from Apps Script
+                fetchPdfData(currentPdfUrl);
             } else {
                 document.getElementById('noPdfMsg').style.display = 'block';
                 document.getElementById('pdfDataContent').innerHTML = '';
@@ -924,7 +929,7 @@
             document.body.style.overflow = 'hidden';
         }
         
-        function convertPdfToHtml(pdfUrl) {
+        async function fetchPdfData(pdfUrl) {
             const loader = document.getElementById('pdfLoader');
             const contentDiv = document.getElementById('pdfDataContent');
             const noPdfMsg = document.getElementById('noPdfMsg');
@@ -933,83 +938,124 @@
             noPdfMsg.style.display = 'none';
             contentDiv.innerHTML = '';
             
-            // Extract file ID from Google Drive URL
-            let fileId = '';
-            if (pdfUrl.includes('drive.google.com/file/d/')) {
-                const match = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
-                if (match && match[1]) fileId = match[1];
-            } else if (pdfUrl.includes('id=')) {
-                const match = pdfUrl.match(/id=([^&]+)/);
-                if (match && match[1]) fileId = match[1];
-            }
-            
-            if (!fileId) {
+            try {
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'parsePdf', 
+                        pdfUrl: pdfUrl 
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentPdfData = result.data;
+                    renderPdfAsHtml(result.data);
+                } else {
+                    throw new Error(result.error || 'Failed to parse PDF');
+                }
+            } catch (error) {
+                console.error('Error fetching PDF data:', error);
                 loader.style.display = 'none';
                 noPdfMsg.style.display = 'block';
-                noPdfMsg.innerHTML = '<span>❌</span><p>Invalid PDF URL format</p>';
+                noPdfMsg.innerHTML = `<span>❌</span><p>Error loading PDF: ${error.message}</p>`;
+            }
+        }
+        
+        function renderPdfAsHtml(data) {
+            const loader = document.getElementById('pdfLoader');
+            const contentDiv = document.getElementById('pdfDataContent');
+            
+            loader.style.display = 'none';
+            
+            if (!data || (!data.summary && (!data.members || data.members.length === 0))) {
+                contentDiv.innerHTML = '<div class="error-message">No data could be extracted from this PDF</div>';
                 return;
             }
             
-            // Simulated PDF data based on your sample
-            setTimeout(() => {
-                loader.style.display = 'none';
+            // Build summary cards HTML
+            let summaryHtml = '';
+            if (data.summary) {
+                summaryHtml = '<div class="section-title">📋 Family Summary</div><div class="summary-grid">';
                 
-                const html = `
-                    <div class="pdf-data-container">
-                        <!-- Summary Cards -->
-                        <div class="section-title">
-                            📋 Family Summary <span>House No: B/154</span>
-                        </div>
-                        <div class="summary-grid">
-                            <div class="summary-card"><div class="label">House Holder</div><div class="value">NAFEESA</div></div>
-                            <div class="summary-card"><div class="label">Old House No</div><div class="value">428</div></div>
-                            <div class="summary-card"><div class="label">Place</div><div class="value">KADALAYI</div></div>
-                            <div class="summary-card"><div class="label">Father/Husband</div><div class="value">ALAVI</div></div>
-                            <div class="summary-card"><div class="label">House Type</div><div class="value">OWN</div></div>
-                            <div class="summary-card"><div class="label">Ration Type</div><div class="value">APL</div></div>
-                            <div class="summary-card"><div class="label">Mobile</div><div class="value">9656687142</div></div>
-                            <div class="summary-card"><div class="label">Madrassa</div><div class="value">VALAVANNUR OLD JUMA MASJID</div></div>
-                            <div class="summary-card"><div class="label">Address</div><div class="value">VARAMBANALA, THAYYILAPPADI</div></div>
-                        </div>
-
-                        <!-- Family Members Table -->
-                        <div class="section-title">
-                            👥 Family Members <span>9 Members</span>
-                        </div>
-                        <div class="table-wrapper">
-                            <table class="pdf-table member-table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Relation</th>
-                                        <th>DOB</th>
-                                        <th>Age</th>
-                                        <th>Father's Name</th>
-                                        <th>Blood Group</th>
-                                        <th>Marital Status</th>
-                                        <th>Mobile</th>
-                                        <th>Gender</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>1</td><td>NAFEESA</td><td>HOUSE HOLDER</td><td>01-01-1954</td><td>72</td><td>ALAVI</td><td>O+</td><td>MARRIED</td><td>9656687142</td><td>Female</td></tr>
-                                    <tr><td>2</td><td>JALEEL</td><td>SON</td><td>09-05-1972</td><td>53</td><td>KUNHI MOIDEEN</td><td>O+</td><td>MARRIED</td><td>9539285904</td><td>Male</td></tr>
-                                    <tr><td>3</td><td>HASEENA</td><td>DAUGHTER IN LAW</td><td>01-05-1979</td><td>46</td><td>HAMSA</td><td>A+</td><td>MARRIED</td><td>9656687142</td><td>Female</td></tr>
-                                    <tr><td>4</td><td>MUFEED MOHIYUDHEEN</td><td>GRAND SON</td><td>02-03-1998</td><td>28</td><td>JALEEL</td><td>O+</td><td>SINGLE</td><td>9656687142</td><td>Male</td></tr>
-                                    <tr><td>5</td><td>MOHAMED MINSHAD</td><td>GRAND SON</td><td>08-10-2003</td><td>22</td><td>JALEEL</td><td>O+</td><td>SINGLE</td><td></td><td>Male</td></tr>
-                                    <tr><td>6</td><td>FATHIMA MINHA</td><td>GRAND DAUGHTER</td><td>18-09-2010</td><td>15</td><td>JALEEL</td><td>O+</td><td>SINGLE</td><td></td><td>Female</td></tr>
-                                    <tr><td>7</td><td>MIFNA NAFEESA</td><td>GRAND DAUGHTER</td><td>10-08-2018</td><td>7</td><td>JALEEL</td><td>A+</td><td>SINGLE</td><td></td><td>Female</td></tr>
-                                    <tr><td>8</td><td>SAKEENA</td><td>DAUGHTER</td><td>10-03-2026</td><td>0</td><td>KUNHI MOIDEEN</td><td>NA</td><td>MARRIED</td><td></td><td>Female</td></tr>
-                                    <tr><td>9</td><td>RASMIYA</td><td>DAUGHTER</td><td>22-01-1990</td><td>36</td><td>KUNHI MOIDEEN</td><td>NA</td><td>MARRIED</td><td></td><td>Female</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                const summaryItems = {
+                    'House No': data.summary.houseNo,
+                    'Old House No': data.summary.oldHouseNo,
+                    'Place': data.summary.place,
+                    'Father/Husband': data.summary.fatherName,
+                    'House Type': data.summary.houseType,
+                    'Ration Type': data.summary.rationType,
+                    'Mobile': data.summary.mobile,
+                    'Madrassa': data.summary.madrassa,
+                    'Address': data.summary.address,
+                    'Ward': data.summary.ward,
+                    'Gender': data.summary.gender,
+                    'Donation': data.summary.donation
+                };
+                
+                for (const [label, value] of Object.entries(summaryItems)) {
+                    if (value) {
+                        summaryHtml += `
+                            <div class="summary-card">
+                                <div class="label">${label}</div>
+                                <div class="value">${value}</div>
+                            </div>
+                        `;
+                    }
+                }
+                summaryHtml += '</div>';
+            }
+            
+            // Build members table HTML
+            let membersHtml = '';
+            if (data.members && data.members.length > 0) {
+                membersHtml = `
+                    <div class="section-title">
+                        👥 Family Members <span>${data.members.length} Members</span>
                     </div>
+                    <div class="table-wrapper">
+                        <table class="pdf-table member-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Relation</th>
+                                    <th>DOB</th>
+                                    <th>Age</th>
+                                    <th>Father's Name</th>
+                                    <th>Blood Group</th>
+                                    <th>Marital Status</th>
+                                    <th>Mobile</th>
+                                    <th>Gender</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 `;
                 
-                contentDiv.innerHTML = html;
-            }, 1000);
+                data.members.forEach(member => {
+                    membersHtml += `
+                        <tr>
+                            <td>${member.slNo || ''}</td>
+                            <td>${member.name || ''}</td>
+                            <td>${member.relation || ''}</td>
+                            <td>${member.dob || ''}</td>
+                            <td>${member.age || ''}</td>
+                            <td>${member.fatherName || ''}</td>
+                            <td>${member.bloodGroup || ''}</td>
+                            <td>${member.maritalStatus || ''}</td>
+                            <td>${member.mobile || ''}</td>
+                            <td>${member.gender || ''}</td>
+                        </tr>
+                    `;
+                });
+                
+                membersHtml += '</tbody></table></div>';
+            }
+            
+            contentDiv.innerHTML = summaryHtml + membersHtml;
         }
         
         function toggleView(view) {
@@ -1064,7 +1110,7 @@
             }, 2000);
         }
         
-        // ========== Sheet Loader Functions (ORIGINAL - UNCHANGED) ==========
+        // ========== Sheet Loader Functions (ORIGINAL) ==========
         function showLoadSheetModal() {
             document.getElementById('loadSheetModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
@@ -1190,7 +1236,7 @@
             document.getElementById(`member${i}_mobile`).value = row['Mobile_1'] || row['Mobile'] || '';
         }
         
-        // ========== Form Functions (ORIGINAL - UNCHANGED) ==========
+        // ========== Form Functions (ORIGINAL) ==========
         function showNewDetails() {
             document.getElementById('newDetailsModal').style.display = 'block';
             document.body.style.overflow = 'hidden';
