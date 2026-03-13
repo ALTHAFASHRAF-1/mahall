@@ -654,7 +654,7 @@
                     <div class="form-group"><label>Mobile</label><input type="tel" id="mobile" placeholder="10-digit mobile" maxlength="10"></div>
                     <div class="form-group"><label>House Holder</label><input type="text" id="houseHolder" placeholder="Enter house holder name"></div>
                     <div class="form-group"><label>House Name</label><input type="text" id="houseName" placeholder="Enter house name"></div>
-                    <div class="form-group"><label>Father's Name</label><input type="text" id="fatherName" placeholder="Enter father's name"></div>
+                    <div class="form-group"><label>Father Name</label><input type="text" id="fatherName" placeholder="Enter father's name"></div>
                     <div class="form-group"><label>Place</label><input type="text" id="place" placeholder="Enter place"></div>
                     <div class="form-group">
                         <label>House Type</label>
@@ -676,7 +676,7 @@
                     </div>
                     <div class="form-group"><label>Postal Address</label><textarea id="postalAddress" rows="2" placeholder="Enter complete address"></textarea></div>
                     <div class="form-group">
-                        <label>Ration Card Type</label>
+                        <label>Ration Type</label>
                         <select id="rationType">
                             <option value="">Select ration type</option>
                             <option value="APL">APL (Above Poverty Line)</option>
@@ -822,10 +822,13 @@
                 const response = await fetch(SHEET_CSV_URL, { cache: 'no-cache' });
                 const csvText = await response.text();
                 const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
-                sheetData = parsed.data.filter(row => row.Name && row.Name.trim() !== '');
+                sheetData = parsed.data.filter(row => row.name && row.name.trim() !== '');
+                
+                console.log('Loaded headers:', parsed.meta.fields);
+                console.log('Sample row:', sheetData[0]);
                 
                 // Populate name dropdown
-                const names = [...new Set(sheetData.map(row => row.Name))].sort();
+                const names = [...new Set(sheetData.map(row => row.name))].sort();
                 nameSelect.innerHTML = '<option value="">-- Choose Name --</option>';
                 names.forEach(name => {
                     nameSelect.innerHTML += `<option value="${name.replace(/"/g, '&quot;')}">${name}</option>`;
@@ -852,8 +855,8 @@
             
             const houses = [...new Set(
                 sheetData
-                    .filter(row => row.Name === selectedName && row['House No'])
-                    .map(row => row['House No'])
+                    .filter(row => row.name === selectedName && row['house no'])
+                    .map(row => row['house no'])
             )].sort();
             
             houseSelect.innerHTML = '<option value="">-- Choose House --</option>';
@@ -871,73 +874,72 @@
                 return;
             }
             
-            // Find main record
-            const mainRecord = sheetData.find(row => 
-                row.Name === name && 
-                row['House No'] === house && 
-                (!row['Member Type'] || row['Member Type'] === 'Main Member')
-            ) || sheetData.find(row => row.Name === name && row['House No'] === house);
+            // Get all rows for this name and house
+            const allRows = sheetData.filter(row => 
+                row.name === name && 
+                row['house no'] === house
+            );
             
-            if (!mainRecord) {
+            if (allRows.length === 0) {
                 alert('No data found for this combination');
                 return;
             }
             
-            // Fill main form fields
-            document.getElementById('block').value = mainRecord['Block'] || '';
-            document.getElementById('grade').value = mainRecord['Grade'] || '';
-            document.getElementById('mobile').value = mainRecord['Mobile'] || '';
-            document.getElementById('houseHolder').value = mainRecord['House Holder'] || '';
-            document.getElementById('houseName').value = mainRecord['House Name'] || '';
-            document.getElementById('fatherName').value = mainRecord['Father Name'] || '';
-            document.getElementById('place').value = mainRecord['Place'] || '';
-            document.getElementById('houseType').value = mainRecord['House Type'] || '';
-            document.getElementById('gender').value = mainRecord['Gender'] || '';
-            document.getElementById('postalAddress').value = mainRecord['Postal Address'] || '';
-            document.getElementById('rationType').value = mainRecord['Ration Card Type'] || mainRecord['Ration Type'] || '';
-            document.getElementById('division').value = mainRecord['Division'] || '';
-            document.getElementById('ward').value = mainRecord['Ward'] || '';
-            document.getElementById('buildingNo').value = mainRecord['Building No'] || '';
-            document.getElementById('oldHouseNo').value = mainRecord['Old House No'] || '';
-            document.getElementById('madrasa').value = mainRecord['Madrasa'] || '';
-            document.getElementById('anyGrant').value = mainRecord['Any Grant'] || mainRecord['Any Grant?'] || '';
-            document.getElementById('donation').value = mainRecord['Donation'] || '';
+            // Use the first row for main details (they should be the same across rows for main fields)
+            const mainRow = allRows[0];
+            
+            // Fill main form fields with exact column names
+            document.getElementById('block').value = mainRow['Block'] || '';
+            document.getElementById('grade').value = mainRow['Grade'] || '';
+            document.getElementById('mobile').value = mainRow['Mobile'] || '';
+            document.getElementById('houseHolder').value = mainRow['House Holder'] || '';
+            document.getElementById('houseName').value = mainRow['House Name'] || '';
+            document.getElementById('fatherName').value = mainRow['Father Name'] || '';
+            document.getElementById('place').value = mainRow['Place'] || '';
+            document.getElementById('houseType').value = mainRow['House Type'] || '';
+            document.getElementById('gender').value = mainRow['Gender'] || '';
+            document.getElementById('postalAddress').value = mainRow['Postal Address'] || '';
+            document.getElementById('rationType').value = mainRow['Ration Type'] || '';
+            document.getElementById('division').value = mainRow['Division'] || '';
+            document.getElementById('ward').value = mainRow['Ward'] || '';
+            document.getElementById('buildingNo').value = mainRow['Building No'] || '';
+            document.getElementById('oldHouseNo').value = mainRow['Old House No'] || '';
+            document.getElementById('madrasa').value = mainRow['Madrasa'] || '';
+            document.getElementById('anyGrant').value = mainRow['Any Grant?'] || '';
+            document.getElementById('donation').value = mainRow['Donation'] || '';
             
             // Clear and add family members
             document.getElementById('membersContainer').innerHTML = '';
             memberCount = 0;
             
-            const familyMembers = sheetData.filter(row => 
-                row.Name === name && 
-                row['House No'] === house && 
-                row['Member Type'] === 'Additional Member' &&
-                row['Member Name'] && row['Member Name'].trim() !== ''
-            );
-            
-            familyMembers.forEach(member => {
-                addMemberWithData(member);
+            // Add each member (each row represents one family member with member fields populated)
+            allRows.forEach(row => {
+                // Check if this row has member data
+                if (row.Name && row.Name.trim() !== '') {
+                    addMemberWithData(row);
+                }
             });
             
             closeModal('loadSheetModal');
             showNewDetails();
         }
         
-        function addMemberWithData(m) {
+        function addMemberWithData(row) {
             addMember(); // creates empty member with current memberCount
             const i = memberCount;
             
-            document.getElementById(`member${i}_name`).value = m['Member Name'] || '';
-            document.getElementById(`member${i}_gender`).value = m['Member Gender'] || '';
-            document.getElementById(`member${i}_relation`).value = m['Member Relation'] || '';
-            document.getElementById(`member${i}_dob`).value = m['Member DOB'] || '';
-            document.getElementById(`member${i}_age`).value = m['Member Age'] || '';
-            document.getElementById(`member${i}_fatherName`).value = m['Member Father Name'] || '';
-            document.getElementById(`member${i}_education`).value = m['Member Education'] || '';
-            document.getElementById(`member${i}_job`).value = m['Member Job'] || '';
-            document.getElementById(`member${i}_health`).value = m['Member Health'] || '';
-            document.getElementById(`member${i}_marriage`).value = m['Member Marriage Status'] || '';
-            document.getElementById(`member${i}_bloodGroup`).value = m['Member Blood Group'] || '';
-            document.getElementById(`member${i}_mobile`).value = m['Member Mobile'] || '';
+            document.getElementById(`member${i}_name`).value = row['Name'] || '';
+            document.getElementById(`member${i}_gender`).value = row['Gender'] || '';
+            document.getElementById(`member${i}_relation`).value = row['Relation to house holder'] || '';
+            document.getElementById(`member${i}_dob`).value = row['DOB'] || '';
+            document.getElementById(`member${i}_age`).value = row['Age'] || '';
+            document.getElementById(`member${i}_fatherName`).value = row['Father name'] || '';
+            document.getElementById(`member${i}_education`).value = row['Education'] || '';
+            document.getElementById(`member${i}_job`).value = row['Job'] || '';
+            document.getElementById(`member${i}_health`).value = row['Health'] || '';
+            document.getElementById(`member${i}_marriage`).value = row['Marriage status'] || '';
+            document.getElementById(`member${i}_bloodGroup`).value = row['Blood group'] || '';
+            document.getElementById(`member${i}_mobile`).value = row['Mobile_1'] || row['Mobile'] || '';
         }
         
         // ========== Form Functions ==========
@@ -975,14 +977,14 @@
                             <option value="Other">Other</option>
                         </select>
                     </div>
-                    <div class="form-group"><label>Relation to House Holder</label><input type="text" id="member${memberCount}_relation" placeholder="e.g., Son, Daughter"></div>
-                    <div class="form-group"><label>Date of Birth</label><input type="date" id="member${memberCount}_dob"></div>
+                    <div class="form-group"><label>Relation to house holder</label><input type="text" id="member${memberCount}_relation" placeholder="e.g., Son, Daughter"></div>
+                    <div class="form-group"><label>DOB</label><input type="date" id="member${memberCount}_dob"></div>
                     <div class="form-group"><label>Age</label><input type="number" id="member${memberCount}_age" placeholder="Age"></div>
-                    <div class="form-group"><label>Father's Name</label><input type="text" id="member${memberCount}_fatherName" placeholder="Father's name"></div>
+                    <div class="form-group"><label>Father name</label><input type="text" id="member${memberCount}_fatherName" placeholder="Father's name"></div>
                     <div class="form-group"><label>Education</label><input type="text" id="member${memberCount}_education" placeholder="Education"></div>
                     <div class="form-group"><label>Job</label><input type="text" id="member${memberCount}_job" placeholder="Occupation"></div>
                     <div class="form-group">
-                        <label>Health Status</label>
+                        <label>Health</label>
                         <select id="member${memberCount}_health">
                             <option value="">Select</option>
                             <option value="Good">Good</option>
@@ -992,7 +994,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Marriage Status</label>
+                        <label>Marriage status</label>
                         <select id="member${memberCount}_marriage">
                             <option value="">Select</option>
                             <option value="Married">Married</option>
@@ -1002,7 +1004,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Blood Group</label>
+                        <label>Blood group</label>
                         <select id="member${memberCount}_bloodGroup">
                             <option value="">Select</option>
                             <option value="A+">A+</option>
