@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Google Drive PDF → HTML Table</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="card header">
+      <div>
+        <h1>PDF → HTML Table Converter</h1>
+        <p class="muted">
+          Paste a Google Drive PDF link (preview or share link). The conversion runs on a Python backend (so it avoids browser CORS issues).
+        </p>
+      </div>
+      <div class="pill">GitHub Pages + Python API</div>
+    </header>
+
+    <section class="card">
+      <form id="convertForm" class="form">
+        <label class="label" for="pdfUrl">Google Drive PDF URL</label>
+        <input
+          id="pdfUrl"
+          name="pdfUrl"
+          type="url"
+          required
+          placeholder="https://drive.google.com/file/d/FILE_ID/preview"
+        />
+
+        <div class="row">
+          <div class="field">
+            <label class="label" for="flavor">Mode</label>
+            <select id="flavor" name="flavor">
+              <option value="stream" selected>stream (whitespace-based)</option>
+              <option value="lattice">lattice (line/border-based)</option>
+            </select>
+          </div>
+
+          <button id="submitBtn" type="submit">Convert</button>
+        </div>
+
+        <p class="muted small">
+          If Drive says “Access denied”, set the PDF sharing to “Anyone with the link can view”.
+        </p>
+      </form>
+
+      <div id="status" class="status">Ready.</div>
+    </section>
+
+    <section class="card">
+      <div class="toolbar">
+        <h2>Result</h2>
+        <button id="copyBtn" class="ghost" type="button" disabled>Copy HTML</button>
+      </div>
+
+      <div id="result" class="result"></div>
+    </section>
+
+    <footer class="muted small">
+      Backend uses Camelot to extract tables from PDFs. [Source](https://camelot-py.readthedocs.io/en/master/user/how-it-works.html)
+    </footer>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
