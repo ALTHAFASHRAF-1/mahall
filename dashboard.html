@@ -566,13 +566,13 @@
         
         <div class="buttons-section">
             <button class="action-btn old-details" onclick="showOldDetails()">
-                <span>📄</span> Old PDF
+                <span>📄</span> Old Details PDF
             </button>
             <button class="action-btn new-details" onclick="showNewDetails()">
-                <span>📝</span> New Form
+                <span>📝</span> New Details Form
             </button>
             <button class="action-btn load-sheet" onclick="showLoadSheetModal()">
-                <span>⬇️</span> Load Saved Data
+                <span>📕</span> Change New Details
             </button>
         </div>
     </div>
@@ -581,9 +581,9 @@
     <div id="oldDetailsModal" class="modal">
         <div class="modal-content" style="padding:1rem 0.8rem;">
             <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
-            <h2>📄 Document Viewer</h2>
+            <h2>📄 Document </h2>
             <div class="pdf-toolbar">
-                <span style="font-weight:500;">Your document</span>
+                <span style="font-weight:500;">Your details</span>
                 <button class="download-btn" id="downloadPdfBtn" onclick="downloadPdf()" disabled>⬇️ Download PDF</button>
             </div>
             <div class="pdf-container">
@@ -600,7 +600,7 @@
     <div id="loadSheetModal" class="modal">
         <div class="modal-content">
             <button class="close-btn" onclick="closeModal('loadSheetModal')">&times;</button>
-            <h2>📊 Load Data from Google Sheet</h2>
+            <h2>Load Submitted datas</h2>
             <div class="selector-panel">
                 <div class="selector-row">
                     <div class="selector-group">
@@ -705,9 +705,9 @@
                 <!-- Family Members Section -->
                 <h3>👥 Family Members</h3>
                 <div id="membersContainer"></div>
-                <button type="button" class="add-member" onclick="addMember()">➕ Add Family Member</button>
+                <button type="button" class="add-member" onclick="addMember()">➕ Add Member</button>
                 
-                <button type="submit" class="submit-btn">✅ Submit to Google Sheet</button>
+                <button type="submit" class="submit-btn">Submit & Update</button>
             </form>
         </div>
     </div>
