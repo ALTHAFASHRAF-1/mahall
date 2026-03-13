@@ -1,5 +1,5 @@
 // 1) Put your Render backend URL here after deployment:
-const API_BASE = "https://YOUR-SERVICE.onrender.com"; // <-- CHANGE THIS
+const API_BASE = "https://mahall-yzi3.onrender.com"; // <-- CHANGE THIS
 
 const $ = (s) => document.querySelector(s);
 
