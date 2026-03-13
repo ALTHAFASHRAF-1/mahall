@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Dashboard · with data loader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: #f0f2f5;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+        
+        .user-info {
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .user-info::before {
+            content: '👤';
+            font-size: 1.3rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(5px);
+        }
+        
+        @media (max-width: 768px) {
+            .logout-btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+                margin: 1rem auto;
+            }
+        }
+        
+        .welcome-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            animation: slideDown 0.5s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .welcome-card h2 {
+            color: #333;
+            font-size: clamp(1.3rem, 5vw, 1.8rem);
+            margin-bottom: 0.5rem;
+        }
+        
+        .welcome-card p {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        .buttons-section {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            padding: 1.2rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 640px) {
+            .action-btn {
+                min-width: 160px;
+                padding: 1rem 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .action-btn {
+                min-width: 100%;
+            }
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .action-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .old-details {
+            background: linear-gradient(135deg, #667eea 0%, #5a67d8 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .new-details {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+        
+        .load-sheet {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+            box-shadow: 0 10px 20px rgba(237, 137, 54, 0.3);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+            overflow-y: auto;
+            padding: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            position: relative;
+            background: white;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 100vh;
+            border-radius: 0;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideUp 0.4s ease;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        @media (min-width: 768px) {
+            .modal-content {
+                margin: 2rem auto;
+                width: 95%;
+                min-height: 0;
+                border-radius: 30px;
+                max-height: 90vh;
+            }
+        }
+        
+        .close-btn {
+            position: sticky;
+            top: 0.5rem;
+            right: 0.5rem;
+            float: right;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #555;
+            background: #f0f0f0;
+            border: none;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            z-index: 20;
+            margin-bottom: -44px;
+        }
+        
+        @media (min-width: 768px) {
+            .close-btn {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                margin-bottom: 0;
+            }
+        }
+        
+        .close-btn:hover {
+            color: #f56565;
+            transform: rotate(90deg);
+            background: #fee;
+        }
+        
+        /* PDF toolbar */
+        .pdf-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 0.5rem 0 1rem 0;
+        }
+        
+        .download-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .download-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+        
+        .pdf-container {
+            text-align: center;
+            margin: 1rem 0 0;
+            padding: 0;
+            background: #f1f3f6;
+            border-radius: 12px;
+            min-height: 70vh;
+            width: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .pdf-container iframe {
+            width: 100%;
+            height: 80vh;
+            border: none;
+            background: white;
+            display: block;
+        }
+        
+        @media (min-width: 768px) {
+            .pdf-container iframe {
+                height: 600px;
+            }
+        }
+        
+        #noPdfMsg {
+            color: #888;
+            font-size: 1.1rem;
+            padding: 3rem 1rem;
+            background: white;
+            border-radius: 15px;
+            border: 2px dashed #ddd;
+            text-align: center;
+            width: 100%;
+        }
+        
+        /* Sheet loader and selectors */
+        .sheet-loader {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        .sheet-loader::after {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #ddd;
+            border-top-color: #ed8936;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
+        .selector-panel {
+            background: #f7fafc;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 2px solid #e2e8f0;
+        }
+        .selector-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .selector-group {
+            flex: 1 1 200px;
+        }
+        .selector-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: #2d3748;
+        }
+        .selector-group select {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 1rem;
+            background: white;
+        }
+        .apply-btn {
+            background: #ed8936;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.9rem 2.5rem;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .apply-btn:hover {
+            background: #dd6b20;
+            transform: translateY(-2px);
+        }
+        .apply-btn:disabled {
+            background: #cbd5e0;
+            pointer-events: none;
+        }
+        
+        /* Form styles - all non-required */
+        h3 {
+            color: #4a5568;
+            margin: 1.8rem 0 1rem 0;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        @media (min-width: 500px) {
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 0.75rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 1rem;
+            background-color: white;
+        }
+        
+        .info-card {
+            background: #f7fafc;
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .member-section {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #edf2f7;
+        }
+        
+        .member-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 0.5rem;
+        }
+        
+        .remove-member {
+            background: #f56565;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 0.7rem 1.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .add-member {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 40px;
+            padding: 1.2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            width: 100%;
+            margin: 0.5rem 0;
+            cursor: pointer;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 1.4rem;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 2rem 0 1rem;
+            cursor: pointer;
+        }
+        
+        .alert {
+            padding: 1rem 1.2rem;
+            border-radius: 20px;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+            display: none;
+        }
+        
+        .alert-success {
+            background: #f0fff4;
+            color: #22543d;
+            border: 2px solid #9ae6b4;
+        }
+        
+        .alert-error {
+            background: #fff5f5;
+            color: #742a2a;
+            border: 2px solid #fc8181;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="user-info" id="userInfo"></div>
+        <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
+    
+    <div class="container">
+        <div class="welcome-card">
+            <h2>Welcome to Dashboard</h2>
+            <p>Choose an option below</p>
+        </div>
+        
+        <div class="buttons-section">
+            <button class="action-btn old-details" onclick="showOldDetails()">
+                <span>📄</span> Old Details PDF
+            </button>
+            <button class="action-btn new-details" onclick="showNewDetails()">
+                <span>📝</span> New Details Form
+            </button>
+            <button class="action-btn load-sheet" onclick="showLoadSheetModal()">
+                <span>📕</span> Change New Details
+            </button>
+        </div>
+    </div>
+    
+    <!-- Old Details Modal - PDF Viewer with Download -->
+    <div id="oldDetailsModal" class="modal">
+        <div class="modal-content" style="padding:1rem 0.8rem;">
+            <button class="close-btn" onclick="closeModal('oldDetailsModal')">&times;</button>
+            <h2>📄 Document </h2>
+            <div class="pdf-toolbar">
+                <span style="font-weight:500;">Your details</span>
+                <button class="download-btn" id="downloadPdfBtn" onclick="downloadPdf()" disabled>⬇️ Download PDF</button>
+            </div>
+            <div class="pdf-container">
+                <iframe id="pdfViewer" src="" style="display:none;"></iframe>
+                <div id="noPdfMsg" style="display:none;">
+                    <span>📄</span>
+                    <p>No PDF available</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load From Sheet Modal -->
+    <div id="loadSheetModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('loadSheetModal')">&times;</button>
+            <h2>Load Submitted datas</h2>
+            <div class="selector-panel">
+                <div class="selector-row">
+                    <div class="selector-group">
+                        <label for="nameSelect">👤 Select Name</label>
+                        <select id="nameSelect" onchange="updateHouseFilter()">
+                            <option value="">-- Choose Name --</option>
+                        </select>
+                    </div>
+                    <div class="selector-group">
+                        <label for="houseSelect">🏠 Select House No</label>
+                        <select id="houseSelect">
+                            <option value="">-- Choose House --</option>
+                        </select>
+                    </div>
+                    <button class="apply-btn" id="applySheetBtn" onclick="applySheetSelection()">Apply</button>
+                </div>
+                <div class="sheet-loader" id="sheetLoader"></div>
+                <p style="margin-top:1rem; color:#4a5568;" id="sheetStatus">Ready to load data...</p>
+            </div>
+            <div style="text-align:center; color:#718096;">
+                <small>Select name and house, then click Apply. The form will open with all saved details.</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New Details Modal - Complete Form (all fields optional) -->
+    <div id="newDetailsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('newDetailsModal')">&times;</button>
+            <h2>📝 Complete Details Form</h2>
+            <div id="formAlert" class="alert"></div>
+            
+            <form id="newDetailsForm">
+                <!-- User Info Cards -->
+                <div class="form-grid">
+                    <div class="info-card">
+                        <strong>Name</strong>
+                        <p id="displayName"></p>
+                    </div>
+                    <div class="info-card">
+                        <strong>House No</strong>
+                        <p id="displayHouseNo"></p>
+                    </div>
+                </div>
+
+                <!-- Main Form Fields - ALL NON-REQUIRED -->
+                <h3>🏠 Basic Information</h3>
+                <div class="form-grid">
+                    <div class="form-group"><label>Block</label><input type="text" id="block" placeholder="Enter block"></div>
+                    <div class="form-group"><label>Grade</label><input type="text" id="grade" placeholder="Enter grade"></div>
+                    <div class="form-group"><label>Mobile</label><input type="tel" id="mobile" placeholder="10-digit mobile" maxlength="10"></div>
+                    <div class="form-group"><label>House Holder</label><input type="text" id="houseHolder" placeholder="Enter house holder name"></div>
+                    <div class="form-group"><label>House Name</label><input type="text" id="houseName" placeholder="Enter house name"></div>
+                    <div class="form-group"><label>Father Name</label><input type="text" id="fatherName" placeholder="Enter father's name"></div>
+                    <div class="form-group"><label>Place</label><input type="text" id="place" placeholder="Enter place"></div>
+                    <div class="form-group">
+                        <label>House Type</label>
+                        <select id="houseType">
+                            <option value="">Select house type</option>
+                            <option value="Own">Own</option>
+                            <option value="Rented">Rented</option>
+                            <option value="Leased">Leased</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="gender">
+                            <option value="">Select gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Postal Address</label><textarea id="postalAddress" rows="2" placeholder="Enter complete address"></textarea></div>
+                    <div class="form-group">
+                        <label>Ration Type</label>
+                        <select id="rationType">
+                            <option value="">Select ration type</option>
+                            <option value="APL">APL (Above Poverty Line)</option>
+                            <option value="BPL">BPL (Below Poverty Line)</option>
+                            <option value="AAY">AAY (Antyodaya)</option>
+                            <option value="PHH">PHH (Priority Household)</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Division</label><input type="text" id="division" placeholder="Enter division"></div>
+                    <div class="form-group"><label>Ward</label><input type="text" id="ward" placeholder="Enter ward"></div>
+                    <div class="form-group"><label>Building No</label><input type="text" id="buildingNo" placeholder="Enter building number"></div>
+                    <div class="form-group"><label>Old House No</label><input type="text" id="oldHouseNo" placeholder="Enter old house number"></div>
+                    <div class="form-group"><label>Madrasa</label><input type="text" id="madrasa" placeholder="Enter madrasa name"></div>
+                    <div class="form-group">
+                        <label>Any Grant?</label>
+                        <select id="anyGrant">
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Donation</label><input type="text" id="donation" placeholder="Enter donation amount"></div>
+                </div>
+
+                <!-- Family Members Section -->
+                <h3>👥 Family Members</h3>
+                <div id="membersContainer"></div>
+                <button type="button" class="add-member" onclick="addMember()">➕ Add Member</button>
+                
+                <button type="submit" class="submit-btn">Submit & Update</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script>
+        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzH5JuHPet3_ojNyrraRtdrKVG2YnZotFuOAPSrw2gWXY8N5FyMNaWMwFs-IPvfP5LyLw/exec';
+        const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTwV2yxjrQAm1q4HGXhfpLlvmbc7igJbAZEuoqA2NRtGCEkBQGb2t5sHjPUik2MQiTCMhpEAxmwKsZ/pub?gid=1513156590&single=true&output=csv';
+        
+        let memberCount = 0;
+        let currentPdfUrl = '';
+        let sheetData = [];
+        
+        window.onload = function() {
+            const userName = sessionStorage.getItem('userName');
+            const userHouse = sessionStorage.getItem('userHouse');
+            
+            if (!userName || !userHouse) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            document.getElementById('userInfo').innerHTML = `${userName} | 🏠 House ${userHouse}`;
+            document.getElementById('displayName').textContent = userName;
+            document.getElementById('displayHouseNo').textContent = userHouse;
+        };
+        
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'index.html';
+        }
+        
+        // ========== PDF Functions ==========
+        function showOldDetails() {
+            const pdfUrl = sessionStorage.getItem('userPdfUrl');
+            const pdfViewer = document.getElementById('pdfViewer');
+            const noPdfMsg = document.getElementById('noPdfMsg');
+            const downloadBtn = document.getElementById('downloadPdfBtn');
+            
+            currentPdfUrl = pdfUrl || '';
+            
+            if (pdfUrl && pdfUrl.trim() !== '') {
+                let previewUrl = pdfUrl;
+                if (pdfUrl.includes('drive.google.com/file/d/')) {
+                    const fileId = pdfUrl.match(/\/d\/(.+?)(\/|$)/);
+                    if (fileId && fileId[1]) {
+                        previewUrl = `https://drive.google.com/file/d/${fileId[1]}/preview`;
+                    }
+                }
+                
+                pdfViewer.src = previewUrl;
+                pdfViewer.style.display = 'block';
+                noPdfMsg.style.display = 'none';
+                downloadBtn.disabled = false;
+            } else {
+                pdfViewer.style.display = 'none';
+                noPdfMsg.style.display = 'block';
+                downloadBtn.disabled = true;
+            }
+            
+            document.getElementById('oldDetailsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function downloadPdf() {
+            if (!currentPdfUrl) return;
+            
+            const btn = document.getElementById('downloadPdfBtn');
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Downloading...';
+            
+            let downloadUrl = currentPdfUrl;
+            
+            if (currentPdfUrl.includes('drive.google.com/file/d/')) {
+                const id = currentPdfUrl.match(/\/d\/(.+?)(\/|$)/);
+                if (id) downloadUrl = `https://drive.google.com/uc?export=download&id=${id[1]}`;
+            } else if (currentPdfUrl.includes('open?id=')) {
+                const id = currentPdfUrl.match(/id=([^&]+)/);
+                if (id) downloadUrl = `https://drive.google.com/uc?export=download&id=${id[1]}`;
+            }
+            
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = '';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.innerHTML = '⬇️ Download PDF';
+            }, 1000);
+        }
+        
+        // ========== Sheet Loader Functions ==========
+        function showLoadSheetModal() {
+            document.getElementById('loadSheetModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            fetchSheetData();
+        }
+        
+        async function fetchSheetData() {
+            const loader = document.getElementById('sheetLoader');
+            const status = document.getElementById('sheetStatus');
+            const nameSelect = document.getElementById('nameSelect');
+            const houseSelect = document.getElementById('houseSelect');
+            
+            loader.style.display = 'block';
+            status.innerText = '⏳ Loading data from Google Sheets...';
+            
+            try {
+                const response = await fetch(SHEET_CSV_URL, { cache: 'no-cache' });
+                const csvText = await response.text();
+                const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+                sheetData = parsed.data.filter(row => row.name && row.name.trim() !== '');
+                
+                console.log('Loaded headers:', parsed.meta.fields);
+                console.log('Sample row:', sheetData[0]);
+                
+                // Populate name dropdown
+                const names = [...new Set(sheetData.map(row => row.name))].sort();
+                nameSelect.innerHTML = '<option value="">-- Choose Name --</option>';
+                names.forEach(name => {
+                    nameSelect.innerHTML += `<option value="${name.replace(/"/g, '&quot;')}">${name}</option>`;
+                });
+                
+                houseSelect.innerHTML = '<option value="">-- Choose House --</option>';
+                status.innerText = `✅ Loaded ${sheetData.length} records. Select a name.`;
+            } catch (error) {
+                console.error('Error loading sheet:', error);
+                status.innerText = '❌ Error loading data. Check console.';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+        
+        function updateHouseFilter() {
+            const selectedName = document.getElementById('nameSelect').value;
+            const houseSelect = document.getElementById('houseSelect');
+            
+            if (!selectedName) {
+                houseSelect.innerHTML = '<option value="">-- Choose House --</option>';
+                return;
+            }
+            
+            const houses = [...new Set(
+                sheetData
+                    .filter(row => row.name === selectedName && row['house no'])
+                    .map(row => row['house no'])
+            )].sort();
+            
+            houseSelect.innerHTML = '<option value="">-- Choose House --</option>';
+            houses.forEach(house => {
+                houseSelect.innerHTML += `<option value="${house.replace(/"/g, '&quot;')}">${house}</option>`;
+            });
+        }
+        
+        function applySheetSelection() {
+            const name = document.getElementById('nameSelect').value;
+            const house = document.getElementById('houseSelect').value;
+            
+            if (!name || !house) {
+                alert('Please select both Name and House No');
+                return;
+            }
+            
+            // Get all rows for this name and house
+            const allRows = sheetData.filter(row => 
+                row.name === name && 
+                row['house no'] === house
+            );
+            
+            if (allRows.length === 0) {
+                alert('No data found for this combination');
+                return;
+            }
+            
+            // Use the first row for main details (they should be the same across rows for main fields)
+            const mainRow = allRows[0];
+            
+            // Fill main form fields with exact column names
+            document.getElementById('block').value = mainRow['Block'] || '';
+            document.getElementById('grade').value = mainRow['Grade'] || '';
+            document.getElementById('mobile').value = mainRow['Mobile'] || '';
+            document.getElementById('houseHolder').value = mainRow['House Holder'] || '';
+            document.getElementById('houseName').value = mainRow['House Name'] || '';
+            document.getElementById('fatherName').value = mainRow['Father Name'] || '';
+            document.getElementById('place').value = mainRow['Place'] || '';
+            document.getElementById('houseType').value = mainRow['House Type'] || '';
+            document.getElementById('gender').value = mainRow['Gender'] || '';
+            document.getElementById('postalAddress').value = mainRow['Postal Address'] || '';
+            document.getElementById('rationType').value = mainRow['Ration Type'] || '';
+            document.getElementById('division').value = mainRow['Division'] || '';
+            document.getElementById('ward').value = mainRow['Ward'] || '';
+            document.getElementById('buildingNo').value = mainRow['Building No'] || '';
+            document.getElementById('oldHouseNo').value = mainRow['Old House No'] || '';
+            document.getElementById('madrasa').value = mainRow['Madrasa'] || '';
+            document.getElementById('anyGrant').value = mainRow['Any Grant?'] || '';
+            document.getElementById('donation').value = mainRow['Donation'] || '';
+            
+            // Clear and add family members
+            document.getElementById('membersContainer').innerHTML = '';
+            memberCount = 0;
+            
+            // Add each member (each row represents one family member with member fields populated)
+            allRows.forEach(row => {
+                // Check if this row has member data
+                if (row.Name && row.Name.trim() !== '') {
+                    addMemberWithData(row);
+                }
+            });
+            
+            closeModal('loadSheetModal');
+            showNewDetails();
+        }
+        
+        function addMemberWithData(row) {
+            addMember(); // creates empty member with current memberCount
+            const i = memberCount;
+            
+            document.getElementById(`member${i}_name`).value = row['Name'] || '';
+            document.getElementById(`member${i}_gender`).value = row['Gender'] || '';
+            document.getElementById(`member${i}_relation`).value = row['Relation to house holder'] || '';
+            document.getElementById(`member${i}_dob`).value = row['DOB'] || '';
+            document.getElementById(`member${i}_age`).value = row['Age'] || '';
+            document.getElementById(`member${i}_fatherName`).value = row['Father name'] || '';
+            document.getElementById(`member${i}_education`).value = row['Education'] || '';
+            document.getElementById(`member${i}_job`).value = row['Job'] || '';
+            document.getElementById(`member${i}_health`).value = row['Health'] || '';
+            document.getElementById(`member${i}_marriage`).value = row['Marriage status'] || '';
+            document.getElementById(`member${i}_bloodGroup`).value = row['Blood group'] || '';
+            document.getElementById(`member${i}_mobile`).value = row['Mobile_1'] || row['Mobile'] || '';
+        }
+        
+        // ========== Form Functions ==========
+        function showNewDetails() {
+            document.getElementById('newDetailsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function addMember() {
+            memberCount++;
+            const container = document.getElementById('membersContainer');
+            
+            const div = document.createElement('div');
+            div.className = 'member-section';
+            div.id = `member_${memberCount}`;
+            
+            div.innerHTML = `
+                <div class="member-header">
+                    <h5>👤 Member ${memberCount}</h5>
+                    <button type="button" class="remove-member" onclick="removeMember(this)">🗑️ Remove</button>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group"><label>Name</label><input type="text" id="member${memberCount}_name" placeholder="Enter name"></div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="member${memberCount}_gender">
+                            <option value="">Select</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Relation to house holder</label><input type="text" id="member${memberCount}_relation" placeholder="e.g., Son, Daughter"></div>
+                    <div class="form-group"><label>DOB</label><input type="date" id="member${memberCount}_dob"></div>
+                    <div class="form-group"><label>Age</label><input type="number" id="member${memberCount}_age" placeholder="Age"></div>
+                    <div class="form-group"><label>Father name</label><input type="text" id="member${memberCount}_fatherName" placeholder="Father's name"></div>
+                    <div class="form-group"><label>Education</label><input type="text" id="member${memberCount}_education" placeholder="Education"></div>
+                    <div class="form-group"><label>Job</label><input type="text" id="member${memberCount}_job" placeholder="Occupation"></div>
+                    <div class="form-group">
+                        <label>Health</label>
+                        <select id="member${memberCount}_health">
+                            <option value="">Select</option>
+                            <option value="Good">Good</option>
+                            <option value="Average">Average</option>
+                            <option value="Poor">Poor</option>
+                            <option value="Chronic illness">Chronic illness</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Marriage status</label>
+                        <select id="member${memberCount}_marriage">
+                            <option value="">Select</option>
+                            <option value="Married">Married</option>
+                            <option value="Unmarried">Unmarried</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Divorced">Divorced</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Blood group</label>
+                        <select id="member${memberCount}_bloodGroup">
+                            <option value="">Select</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Mobile</label><input type="tel" id="member${memberCount}_mobile" maxlength="10" placeholder="Mobile number"></div>
+                </div>
+            `;
+            
+            container.appendChild(div);
+            
+            // Auto-calculate age from DOB
+            const dobInput = document.getElementById(`member${memberCount}_dob`);
+            const ageInput = document.getElementById(`member${memberCount}_age`);
+            
+            dobInput.addEventListener('change', function() {
+                if (this.value) {
+                    const birthDate = new Date(this.value);
+                    const today = new Date();
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    const m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+                    ageInput.value = age;
+                }
+            });
+        }
+        
+        function removeMember(button) {
+            const memberDiv = button.closest('.member-section');
+            memberDiv.remove();
+            memberCount--;
+        }
+        
+        function showAlert(message, type) {
+            const alert = document.getElementById('formAlert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form submission
+        document.getElementById('newDetailsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                timestamp: new Date().toISOString(),
+                name: document.getElementById('displayName').textContent,
+                house_no: document.getElementById('displayHouseNo').textContent,
+                block: document.getElementById('block').value,
+                grade: document.getElementById('grade').value,
+                mobile: document.getElementById('mobile').value,
+                house_holder: document.getElementById('houseHolder').value,
+                house_name: document.getElementById('houseName').value,
+                father_name: document.getElementById('fatherName').value,
+                place: document.getElementById('place').value,
+                house_type: document.getElementById('houseType').value,
+                gender: document.getElementById('gender').value,
+                postal_address: document.getElementById('postalAddress').value,
+                ration_type: document.getElementById('rationType').value,
+                division: document.getElementById('division').value,
+                ward: document.getElementById('ward').value,
+                building_no: document.getElementById('buildingNo').value,
+                old_house_no: document.getElementById('oldHouseNo').value,
+                madrasa: document.getElementById('madrasa').value,
+                any_grant: document.getElementById('anyGrant').value,
+                donation: document.getElementById('donation').value
+            };
+            
+            const members = [];
+            for (let i = 1; i <= memberCount; i++) {
+                if (!document.getElementById(`member_${i}`)) continue;
+                
+                members.push({
+                    name: document.getElementById(`member${i}_name`)?.value || '',
+                    gender: document.getElementById(`member${i}_gender`)?.value || '',
+                    relation: document.getElementById(`member${i}_relation`)?.value || '',
+                    dob: document.getElementById(`member${i}_dob`)?.value || '',
+                    age: document.getElementById(`member${i}_age`)?.value || '',
+                    father_name: document.getElementById(`member${i}_fatherName`)?.value || '',
+                    education: document.getElementById(`member${i}_education`)?.value || '',
+                    job: document.getElementById(`member${i}_job`)?.value || '',
+                    health: document.getElementById(`member${i}_health`)?.value || '',
+                    marriage: document.getElementById(`member${i}_marriage`)?.value || '',
+                    blood_group: document.getElementById(`member${i}_bloodGroup`)?.value || '',
+                    mobile: document.getElementById(`member${i}_mobile`)?.value || ''
+                });
+            }
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            
+            try {
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submitDetails',
+                        formData: formData,
+                        members: members
+                    })
+                });
+                
+                showAlert('✅ Form submitted successfully!', 'success');
+                
+                setTimeout(() => {
+                    closeModal('newDetailsModal');
+                    document.getElementById('newDetailsForm').reset();
+                    document.getElementById('membersContainer').innerHTML = '';
+                    memberCount = 0;
+                }, 2000);
+                
+            } catch (error) {
+                showAlert('❌ Error submitting form', 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        };
+        
+        // Mobile number validation
+        document.getElementById('mobile').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+        });
+    </script>
+</body>
+</html>
